@@ -46,6 +46,17 @@ var TSOS;
             // rot13 <string>
             sc = new TSOS.ShellCommand(this.shellRot13, "rot13", "<string> - Does rot13 obfuscation on <string>.");
             this.commandList[this.commandList.length] = sc;
+            // date
+            //	sc = new ShellCommand(this.shellDate,
+            //	                      "date",
+            //						  "- Displays the current date and time.")
+            this.commandList[this.commandList.length] = sc;
+            // whereami
+            sc = new TSOS.ShellCommand(this.shellWhereami, "whereami", "- Displays the user's current location.");
+            this.commandList[this.commandList.length] = sc;
+            // paradox
+            sc = new TSOS.ShellCommand(this.shellParadox, "paradox", "- Attempts to fry the computer by forcing it to contemplate a paradox.");
+            this.commandList[this.commandList.length] = sc;
             // prompt <string>
             sc = new TSOS.ShellCommand(this.shellPrompt, "prompt", "<string> - Sets the prompt.");
             this.commandList[this.commandList.length] = sc;
@@ -196,6 +207,9 @@ var TSOS;
                         _StdOut.putText("Help displays a list of (hopefully) valid commands.");
                         break;
                     // TODO: Make descriptive MANual page entries for the the rest of the shell commands here.
+                    case "ver":
+                        _StdOut.putText("Ver displays the current version.");
+                        break;
                     default:
                         _StdOut.putText("No manual entry for " + args[0] + ".");
                 }
@@ -238,6 +252,16 @@ var TSOS;
                 _StdOut.putText("Usage: rot13 <string>  Please supply a string.");
             }
         };
+        /*   public shellDate(args) {
+               _StdOut.putText("It is " + Date.getHours + ":" + Date.getMinutes + " on " + Date.getMonth + " " + Date.getDate + ", " + Date.getFullYear)
+           }
+       */
+        Shell.prototype.shellWhereami = function (args) {
+            _StdOut.putText("Earth, dummy");
+        };
+        Shell.prototype.shellParadox = function (args) {
+            _StdOut.putText("Nice try.");
+        };
         Shell.prototype.shellPrompt = function (args) {
             if (args.length > 0) {
                 _OsShell.promptStr = args[0];
@@ -247,6 +271,6 @@ var TSOS;
             }
         };
         return Shell;
-    })();
+    }());
     TSOS.Shell = Shell;
 })(TSOS || (TSOS = {}));

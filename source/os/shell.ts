@@ -80,17 +80,17 @@ module TSOS {
 		//						  "- Displays the current date and time.")
 			this.commandList[this.commandList.length] = sc;
 
-			// whereami
-			sc = new ShellCommand(this.shellWhereami,
-			                      "whereami",
+            // whereami
+            sc = new ShellCommand(this.shellWhereami,
+                                  "whereami",
 								  "- Displays the user's current location.")
-			this.commandList[this.commandList.length] = sc;
+            this.commandList[this.commandList.length] = sc;
 			
-			// paradox
-			sc = new ShellCommand(this.shellParadox,
+            // paradox
+            sc = new ShellCommand(this.shellParadox,
 			                      "paradox",
 								  "- Attempts to fry the computer by forcing it to contemplate a paradox.")
-			this.commandList[this.commandList.length] = sc;
+            this.commandList[this.commandList.length] = sc;
 			
             // prompt <string>
             sc = new ShellCommand(this.shellPrompt,
