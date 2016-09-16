@@ -25,7 +25,8 @@ module TSOS {
 
         constructor() {
         }
-
+        
+        
         public init() {
             var sc;
             //
@@ -74,9 +75,9 @@ module TSOS {
             this.commandList[this.commandList.length] = sc;
 
 			// date
-			sc = new ShellCommand(this.shellDate,
-			                      "date",
-								  "- Displays the current date and time.")
+		//	sc = new ShellCommand(this.shellDate,
+		//	                      "date",
+		//						  "- Displays the current date and time.")
 			this.commandList[this.commandList.length] = sc;
 
 			// whereami
@@ -300,15 +301,15 @@ module TSOS {
             }
         }
 
-		public shellDate(args) {
+     /*   public shellDate(args) {
 			_StdOut.putText("It is " + Date.getHours + ":" + Date.getMinutes + " on " + Date.getMonth + " " + Date.getDate + ", " + Date.getFullYear)
 		}
-		
-		public shellWhereami(args) {
+	*/	
+        public shellWhereami(args) {
 			_StdOut.putText("Earth, dummy")
 		}
 		
-		public shellParadox(args) {
+        public shellParadox(args) {
 			_StdOut.putText("Nice try.")
 		}
 		
