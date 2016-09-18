@@ -57,6 +57,9 @@ var TSOS;
             // paradox
             sc = new TSOS.ShellCommand(this.shellParadox, "paradox", "- Attempts to fry the computer by forcing it to contemplate a paradox.");
             this.commandList[this.commandList.length] = sc;
+            // Blue Screen Of Death
+            sc = new TSOS.ShellCommand(this.shellBSOD, "bsod", "- Tests the BSOD.");
+            this.commandList[this.commandList.length] = sc;
             // prompt <string>
             sc = new TSOS.ShellCommand(this.shellPrompt, "prompt", "<string> - Sets the prompt.");
             this.commandList[this.commandList.length] = sc;
@@ -261,6 +264,12 @@ var TSOS;
         };
         Shell.prototype.shellParadox = function (args) {
             _StdOut.putText("Nice try.");
+        };
+        Shell.prototype.shellBSOD = function (args) {
+            document.getElementById("display").style.backgroundColor = 'rgb(19, 72, 220)';
+            _StdOut.clearScreen();
+            _StdOut.resetXY();
+            _StdOut.putText("An error has occured. Please Reset.");
         };
         Shell.prototype.shellPrompt = function (args) {
             if (args.length > 0) {

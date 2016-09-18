@@ -92,6 +92,12 @@ module TSOS {
 								  "- Attempts to fry the computer by forcing it to contemplate a paradox.")
             this.commandList[this.commandList.length] = sc;
 			
+            // Blue Screen Of Death
+            sc = new ShellCommand(this.shellBSOD,
+                                  "bsod",
+            					  "- Tests the BSOD.")
+            this.commandList[this.commandList.length] = sc;
+            
             // prompt <string>
             sc = new ShellCommand(this.shellPrompt,
                                   "prompt",
@@ -306,13 +312,20 @@ module TSOS {
 		}
 	*/	
         public shellWhereami(args) {
-			_StdOut.putText("Earth, dummy")
+            _StdOut.putText("Earth, dummy")
 		}
 		
         public shellParadox(args) {
-			_StdOut.putText("Nice try.")
+            _StdOut.putText("Nice try.")
 		}
 		
+        public shellBSOD(args) {
+            document.getElementById("display").style.backgroundColor = 'rgb(19, 72, 220)';
+            _StdOut.clearScreen();
+            _StdOut.resetXY();
+            _StdOut.putText("An error has occured. Please Reset.")
+		}
+        
         public shellPrompt(args) {
             if (args.length > 0) {
                 _OsShell.promptStr = args[0];
