@@ -75,9 +75,9 @@ module TSOS {
             this.commandList[this.commandList.length] = sc;
 
 			// date
-		//	sc = new ShellCommand(this.shellDate,
-		//	                      "date",
-		//						  "- Displays the current date and time.")
+            sc = new ShellCommand(this.shellDate,
+                                  "date",
+                                  "- Displays the current date and time.")
 			this.commandList[this.commandList.length] = sc;
 
             // whereami
@@ -96,6 +96,12 @@ module TSOS {
             sc = new ShellCommand(this.shellBSOD,
                                   "bsod",
             					  "- Tests the BSOD.")
+            this.commandList[this.commandList.length] = sc;
+
+            // status
+            sc = new ShellCommand(this.shellStatus,
+                                  "status",
+            					  "<string> - Sets the status.")
             this.commandList[this.commandList.length] = sc;
             
             // prompt <string>
@@ -307,10 +313,11 @@ module TSOS {
             }
         }
 
-     /*   public shellDate(args) {
-			_StdOut.putText("It is " + Date.getHours + ":" + Date.getMinutes + " on " + Date.getMonth + " " + Date.getDate + ", " + Date.getFullYear)
+        public shellDate(args) {
+            var now = new Date();
+			_StdOut.putText("It is " + now.getHours() + ":" + now.getMinutes() + " on " + (now.getMonth() + 1) + "/" + now.getDate() + "/" + now.getFullYear())
 		}
-	*/	
+		
         public shellWhereami(args) {
             _StdOut.putText("Earth, dummy")
 		}
@@ -324,6 +331,11 @@ module TSOS {
             _StdOut.clearScreen();
             _StdOut.resetXY();
             _StdOut.putText("An error has occured. Please Reset.")
+		}
+
+        public shellStatus(args) {
+            document.getElementById("tb").innerHTML = "Date/Time placeholder " + args
+           
 		}
         
         public shellPrompt(args) {

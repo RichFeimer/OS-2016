@@ -47,9 +47,7 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellRot13, "rot13", "<string> - Does rot13 obfuscation on <string>.");
             this.commandList[this.commandList.length] = sc;
             // date
-            //	sc = new ShellCommand(this.shellDate,
-            //	                      "date",
-            //						  "- Displays the current date and time.")
+            sc = new TSOS.ShellCommand(this.shellDate, "date", "- Displays the current date and time.");
             this.commandList[this.commandList.length] = sc;
             // whereami
             sc = new TSOS.ShellCommand(this.shellWhereami, "whereami", "- Displays the user's current location.");
@@ -59,6 +57,9 @@ var TSOS;
             this.commandList[this.commandList.length] = sc;
             // Blue Screen Of Death
             sc = new TSOS.ShellCommand(this.shellBSOD, "bsod", "- Tests the BSOD.");
+            this.commandList[this.commandList.length] = sc;
+            // status
+            sc = new TSOS.ShellCommand(this.shellStatus, "status", "<string> - Sets the status.");
             this.commandList[this.commandList.length] = sc;
             // prompt <string>
             sc = new TSOS.ShellCommand(this.shellPrompt, "prompt", "<string> - Sets the prompt.");
@@ -255,10 +256,10 @@ var TSOS;
                 _StdOut.putText("Usage: rot13 <string>  Please supply a string.");
             }
         };
-        /*   public shellDate(args) {
-               _StdOut.putText("It is " + Date.getHours + ":" + Date.getMinutes + " on " + Date.getMonth + " " + Date.getDate + ", " + Date.getFullYear)
-           }
-       */
+        Shell.prototype.shellDate = function (args) {
+            var now = new Date();
+            _StdOut.putText("It is " + now.getHours() + ":" + now.getMinutes() + " on " + (now.getMonth() + 1) + "/" + now.getDate() + "/" + now.getFullYear());
+        };
         Shell.prototype.shellWhereami = function (args) {
             _StdOut.putText("Earth, dummy");
         };
@@ -270,6 +271,9 @@ var TSOS;
             _StdOut.clearScreen();
             _StdOut.resetXY();
             _StdOut.putText("An error has occured. Please Reset.");
+        };
+        Shell.prototype.shellStatus = function (args) {
+            document.getElementById("tb").innerHTML = "Date/Time placeholder " + args;
         };
         Shell.prototype.shellPrompt = function (args) {
             if (args.length > 0) {
