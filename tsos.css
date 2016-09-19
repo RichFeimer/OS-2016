@@ -36,11 +36,21 @@ h3 {
   cursor: default;
 }
 
-.taskbar {
+#taskbar {
   margin: 4px;
   background-color:#6FA8DC;
   border: 2px solid blue;
   width: 500px;
+    
+}
+.taskbarTime {
+  width: 198px;
+  float: left;
+}
+
+.taskbarStatus {
+  width: 298px;
+  float: right;
 }
 
 .normal_button {

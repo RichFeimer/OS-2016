@@ -258,7 +258,13 @@ var TSOS;
         };
         Shell.prototype.shellDate = function (args) {
             var now = new Date();
-            _StdOut.putText("It is " + now.getHours() + ":" + now.getMinutes() + " on " + (now.getMonth() + 1) + "/" + now.getDate() + "/" + now.getFullYear());
+            var hr = now.getHours();
+            var min = now.getMinutes();
+            if (min < 10) {
+                min = parseInt("0" + min.toString());
+            }
+            _StdOut.putText("It is " + hr + ":" + min + " on " + (now.getMonth() + 1) + "/" + now.getDate() + "/" + now.getFullYear());
+            //TODO: Perhaps change to 12 hour format
         };
         Shell.prototype.shellWhereami = function (args) {
             _StdOut.putText("Earth, dummy");
@@ -273,7 +279,7 @@ var TSOS;
             _StdOut.putText("An error has occured. Please Reset.");
         };
         Shell.prototype.shellStatus = function (args) {
-            document.getElementById("tb").innerHTML = "Date/Time placeholder " + args;
+            document.getElementById("tbs").innerHTML = args;
         };
         Shell.prototype.shellPrompt = function (args) {
             if (args.length > 0) {

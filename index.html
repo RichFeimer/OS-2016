@@ -34,7 +34,7 @@
    <script type="text/javascript" src="http://www.labouseur.com/courses/os/projects/glados.js"></script>
 </head>
 
-<body onload="onDocumentLoad()">
+<body onload="onDocumentLoad(); clock()">
 
 <div id="divMain" style="width:100%;">
 
@@ -86,9 +86,16 @@
       </label>
    </div>
 
-   <div class="taskbar" id="tb">
-	Date
+  <div id="taskbar"> 
+   <div class="taskbarTime" id="tbt">
+	
    </div>
+   
+   <div class="taskbarStatus" id="tbs">
+	Status
+   </div>
+   <br style="clear:both;"/>
+  </div> 
    
    <div id="divUserProgramInput" style="margin-left:520px;">
       <label>
@@ -110,6 +117,25 @@
    Reproduction is inhibited without the express written consent of
    Ted Codd, Stevie Ray Vaughan, and Ian Fleming.
 </p>
+<script>
+<!--This function is here because I can't think of any better place to put it right now -->
+function clock(){
+    var clck = new Date();
+    ap = "am";
+    h = clck.getHours();
+    min = clck.getMinutes();
+    s = clck.getSeconds();
+    if (h==0) { h = 12; }
+    if (h>11) { ap = "pm"; }
+    if (h>12) { h = h-12; }
+    if (min<10) { min = "0" + min; }
+    if (s<10) { s = "0" + s; }
+    document.getElementById('tbt').innerHTML = h + ":" + min + ":" + s + " " + ap + " -- "
+        + (clck.getMonth() + 1) + "/" + clck.getDate() + "/" + clck.getFullYear();
+    tmt = setTimeout('clock()',500);
+    }
+</script>
+
 
 </body>
 </html>

@@ -315,8 +315,12 @@ module TSOS {
 
         public shellDate(args) {
             var now = new Date();
-			_StdOut.putText("It is " + now.getHours() + ":" + now.getMinutes() + " on " + (now.getMonth() + 1) + "/" + now.getDate() + "/" + now.getFullYear())
-		}
+			let hr = now.getHours();
+            let min = now.getMinutes();
+            if (min < 10) { min = parseInt("0" + min.toString());}
+            _StdOut.putText("It is " + hr + ":" + min + " on " + (now.getMonth() + 1) + "/" + now.getDate() + "/" + now.getFullYear())
+            //TODO: Perhaps change to 12 hour format
+        }
 		
         public shellWhereami(args) {
             _StdOut.putText("Earth, dummy")
@@ -334,7 +338,7 @@ module TSOS {
 		}
 
         public shellStatus(args) {
-            document.getElementById("tb").innerHTML = "Date/Time placeholder " + args
+            document.getElementById("tbs").innerHTML = args
            
 		}
         
