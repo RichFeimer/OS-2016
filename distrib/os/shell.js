@@ -61,6 +61,8 @@ var TSOS;
             // status
             sc = new TSOS.ShellCommand(this.shellStatus, "status", "<string> - Sets the status.");
             this.commandList[this.commandList.length] = sc;
+            sc = new TSOS.ShellCommand(this.shellLoad, "load", "- Validates the user code.");
+            this.commandList[this.commandList.length] = sc;
             // prompt <string>
             sc = new TSOS.ShellCommand(this.shellPrompt, "prompt", "<string> - Sets the prompt.");
             this.commandList[this.commandList.length] = sc;
@@ -279,7 +281,21 @@ var TSOS;
             _StdOut.putText("An error has occured. Please Reset.");
         };
         Shell.prototype.shellStatus = function (args) {
+            //let newStatus = ((args.replace(/,/g, ' ')).toString()); 
+            //My attempt to replace commas in the status with spaces has an odd effect. I'll try again later.
             document.getElementById("tbs").innerHTML = args;
+        };
+        Shell.prototype.shellLoad = function (args) {
+            function isHex(h) {
+                var spaceRmv = h.replace(/ /g, '');
+                var check = parseInt(spaceRmv, 16);
+                return (check.toString(16) === spaceRmv.toLowerCase());
+            }
+            if (isHex(document.getElementById("taProgramInput").value)) {
+                _StdOut.putText("Valid code");
+            }
+            else
+                _StdOut.putText("Invalid code");
         };
         Shell.prototype.shellPrompt = function (args) {
             if (args.length > 0) {

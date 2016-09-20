@@ -104,6 +104,11 @@ module TSOS {
             					  "<string> - Sets the status.")
             this.commandList[this.commandList.length] = sc;
             
+            sc = new ShellCommand(this.shellLoad,
+                                  "load",
+            					  "- Validates the user code.")
+            this.commandList[this.commandList.length] = sc;
+            
             // prompt <string>
             sc = new ShellCommand(this.shellPrompt,
                                   "prompt",
@@ -323,23 +328,34 @@ module TSOS {
         }
 		
         public shellWhereami(args) {
-            _StdOut.putText("Earth, dummy")
+            _StdOut.putText("Earth, dummy");
 		}
 		
         public shellParadox(args) {
-            _StdOut.putText("Nice try.")
+            _StdOut.putText("Nice try.");
 		}
 		
         public shellBSOD(args) {
             document.getElementById("display").style.backgroundColor = 'rgb(19, 72, 220)';
             _StdOut.clearScreen();
             _StdOut.resetXY();
-            _StdOut.putText("An error has occured. Please Reset.")
+            _StdOut.putText("An error has occured. Please Reset.");
 		}
 
         public shellStatus(args) {
-            document.getElementById("tbs").innerHTML = args
-           
+            //let newStatus = ((args.replace(/,/g, ' ')).toString()); 
+            //My attempt to replace commas in the status with spaces has an odd effect. I'll try again later.
+            document.getElementById("tbs").innerHTML = args;
+		}
+        
+        public shellLoad(args) {
+            function isHex(h) {
+                let spaceRmv = h.replace(/ /g, '');
+                let check = parseInt(spaceRmv,16);
+                return (check.toString(16) === spaceRmv.toLowerCase());
+            }   
+            if (isHex((<HTMLInputElement>document.getElementById("taProgramInput")).value)) {_StdOut.putText("Valid code")}
+                else _StdOut.putText("Invalid code");
 		}
         
         public shellPrompt(args) {
