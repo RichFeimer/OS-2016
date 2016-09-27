@@ -15,6 +15,21 @@
      ------------ */
 var TSOS;
 (function (TSOS) {
+    var Byte = (function () {
+        function Byte(hex) {
+            this.byte = hex;
+        }
+        return Byte;
+    }());
+    var Memory = (function () {
+        function Memory(size) {
+            this.bytes = [];
+            for (var i = 0; i < size; i++) {
+                this.bytes[i] = new Byte("00");
+            }
+        }
+        return Memory;
+    }());
     var Cpu = (function () {
         function Cpu(PC, Acc, Xreg, Yreg, Zflag, isExecuting) {
             if (PC === void 0) { PC = 0; }
@@ -29,6 +44,9 @@ var TSOS;
             this.Yreg = Yreg;
             this.Zflag = Zflag;
             this.isExecuting = isExecuting;
+            this.memSize = 768;
+            var memry = new Memory(this.memSize);
+            this.memory = memry.bytes;
         }
         Cpu.prototype.init = function () {
             this.PC = 0;
@@ -91,6 +109,9 @@ var TSOS;
                     this.breakProcess();
             }
         };
+        Cpu.prototype.increasePC = function (bytes) {
+            this.PC = (this.PC + bytes);
+        };
         Cpu.prototype.loadAccWithConst = function () {
             //TODO: Write code 
         };
@@ -117,6 +138,7 @@ var TSOS;
         };
         Cpu.prototype.noOp = function () {
             //TODO: Write code 
+            this.increasePC(1);
         };
         Cpu.prototype.breakProcess = function () {
             //TODO: Write code 

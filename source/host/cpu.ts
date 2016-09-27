@@ -16,7 +16,23 @@
      ------------ */
 
 module TSOS {
-
+    
+    class Byte {
+        public byte: String;
+        constructor(hex: String) {
+          this.byte = hex;  
+        }
+    }
+    
+    class Memory {
+        public bytes: Byte[] = [];
+        constructor(size: Number) {
+            for (var i = 0; i < size; i++) {
+               this.bytes[i] = new Byte("00");
+            }
+        }
+    }
+    
     export class Cpu {
 
         constructor(public PC: number = 0,
@@ -26,6 +42,8 @@ module TSOS {
                     public Zflag: number = 0,
                     public isExecuting: boolean = false) {
 
+                    var memry = new Memory(this.memSize);
+                    this.memory = memry.bytes;
         }
 
         public init(): void {
@@ -37,6 +55,9 @@ module TSOS {
             this.isExecuting = false;
         }
 
+        public memSize: Number = 768;
+        public memory: Byte[];
+        
         public cycle(): void {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
@@ -93,6 +114,10 @@ module TSOS {
             }
         }
         
+        public increasePC(bytes): void {
+            this.PC = (this.PC + bytes)
+        }
+        
         public loadAccWithConst(): void {
            //TODO: Write code 
         }
@@ -127,6 +152,7 @@ module TSOS {
         
         public noOp(): void {
            //TODO: Write code 
+           this.increasePC(1);
         }
         
         public breakProcess(): void {
@@ -148,5 +174,10 @@ module TSOS {
         public sysCall(): void {
            //TODO: Write code 
         }
+        
+        //public readNextByte(): String{
+        //    var location = location + this.PC;
+        //    return this.memory[location].byte;
+        //}
     }
 }
