@@ -43,6 +43,96 @@ var TSOS;
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
         };
+        Cpu.prototype.execute = function (instr) {
+            switch (instr) {
+                case "a9":
+                    this.loadAccWithConst();
+                    break;
+                case "ad":
+                    this.loadAccFromMem();
+                    break;
+                case "8d":
+                    this.storeAccInMem();
+                    break;
+                case "6d":
+                    this.addWithCarry();
+                    break;
+                case "a2":
+                    this.loadXRegWithConst();
+                    break;
+                case "ae":
+                    this.loadXRegFromMem();
+                    break;
+                case "a0":
+                    this.loadYRegWithConst();
+                    break;
+                case "ac":
+                    this.loadYRegFromMem();
+                    break;
+                case "ea":
+                    this.noOp();
+                    break;
+                case "00":
+                    this.breakProcess();
+                    break;
+                case "ec":
+                    this.compareToXReg();
+                    break;
+                case "d0":
+                    this.branchNotEqual();
+                    break;
+                case "ee":
+                    this.incrByteVal();
+                    break;
+                case "ff":
+                    this.sysCall();
+                    break;
+                default:
+                    this.breakProcess();
+            }
+        };
+        Cpu.prototype.loadAccWithConst = function () {
+            //TODO: Write code 
+        };
+        Cpu.prototype.loadAccFromMem = function () {
+            //TODO: Write code 
+        };
+        Cpu.prototype.storeAccInMem = function () {
+            //TODO: Write code 
+        };
+        Cpu.prototype.addWithCarry = function () {
+            //TODO: Write code 
+        };
+        Cpu.prototype.loadXRegWithConst = function () {
+            //TODO: Write code 
+        };
+        Cpu.prototype.loadXRegFromMem = function () {
+            //TODO: Write code 
+        };
+        Cpu.prototype.loadYRegWithConst = function () {
+            //TODO: Write code 
+        };
+        Cpu.prototype.loadYRegFromMem = function () {
+            //TODO: Write code 
+        };
+        Cpu.prototype.noOp = function () {
+            //TODO: Write code 
+        };
+        Cpu.prototype.breakProcess = function () {
+            //TODO: Write code 
+        };
+        Cpu.prototype.compareToXReg = function () {
+            //TODO: Write code 
+        };
+        Cpu.prototype.branchNotEqual = function () {
+            //TODO: Write code 
+        };
+        Cpu.prototype.incrByteVal = function () {
+            //TODO: Write code 
+        };
+        Cpu.prototype.sysCall = function () {
+            //TODO: Write code 
+        };
         return Cpu;
     }());
     TSOS.Cpu = Cpu;

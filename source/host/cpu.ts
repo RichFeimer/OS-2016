@@ -42,5 +42,111 @@ module TSOS {
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
         }
+        
+        public execute(instr) : void {
+            switch(instr) {
+                case "a9":
+                this.loadAccWithConst();
+                break;
+                case "ad":
+                this.loadAccFromMem();
+                break;
+                case "8d":
+                this.storeAccInMem();
+                break;
+                case "6d":
+                this.addWithCarry();
+                break;
+                case "a2":
+                this.loadXRegWithConst();
+                break;
+                case "ae":
+                this.loadXRegFromMem();
+                break;
+                case "a0":
+                this.loadYRegWithConst();
+                break;
+                case "ac":
+                this.loadYRegFromMem();
+                break;
+                case "ea":
+                this.noOp();
+                break;
+                case "00":
+                this.breakProcess();
+                break;
+                case "ec":
+                this.compareToXReg();
+                break;
+                case "d0":
+                this.branchNotEqual();
+                break;
+                case "ee":
+                this.incrByteVal();
+                break;
+                case "ff":
+                this.sysCall();
+                break;
+                
+                default:
+                this.breakProcess();
+            }
+        }
+        
+        public loadAccWithConst(): void {
+           //TODO: Write code 
+        }
+        
+        public loadAccFromMem(): void {
+           //TODO: Write code 
+        }
+        
+        public storeAccInMem(): void {
+           //TODO: Write code 
+        }
+        
+        public addWithCarry(): void {
+           //TODO: Write code 
+        }
+        
+        public loadXRegWithConst(): void {
+           //TODO: Write code 
+        }
+        
+        public loadXRegFromMem(): void {
+           //TODO: Write code 
+        }
+        
+        public loadYRegWithConst(): void {
+           //TODO: Write code 
+        }
+        
+        public loadYRegFromMem(): void {
+           //TODO: Write code 
+        }
+        
+        public noOp(): void {
+           //TODO: Write code 
+        }
+        
+        public breakProcess(): void {
+           //TODO: Write code 
+        }
+        
+        public compareToXReg(): void {
+           //TODO: Write code 
+        }
+        
+        public branchNotEqual(): void {
+           //TODO: Write code 
+        }
+        
+        public incrByteVal(): void {
+           //TODO: Write code 
+        }
+        
+        public sysCall(): void {
+           //TODO: Write code 
+        }
     }
 }
