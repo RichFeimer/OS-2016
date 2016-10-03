@@ -15,21 +15,6 @@
      ------------ */
 var TSOS;
 (function (TSOS) {
-    var Byte = (function () {
-        function Byte(hex) {
-            this.byte = hex;
-        }
-        return Byte;
-    }());
-    var Memory = (function () {
-        function Memory(size) {
-            this.bytes = [];
-            for (var i = 0; i < size; i++) {
-                this.bytes[i] = new Byte("00");
-            }
-        }
-        return Memory;
-    }());
     var Cpu = (function () {
         function Cpu(PC, Acc, Xreg, Yreg, Zflag, isExecuting) {
             if (PC === void 0) { PC = 0; }
@@ -45,7 +30,7 @@ var TSOS;
             this.Zflag = Zflag;
             this.isExecuting = isExecuting;
             this.memSize = 768;
-            var memry = new Memory(this.memSize);
+            var memry = new TSOS.Memory(this.memSize);
             this.memory = memry.bytes;
         }
         Cpu.prototype.init = function () {
@@ -113,7 +98,8 @@ var TSOS;
             this.PC = (this.PC + bytes);
         };
         Cpu.prototype.loadAccWithConst = function () {
-            //TODO: Write code 
+            this.Acc = this.getNextByte();
+            this.increasePC(2);
         };
         Cpu.prototype.loadAccFromMem = function () {
             //TODO: Write code 
@@ -137,7 +123,7 @@ var TSOS;
             //TODO: Write code 
         };
         Cpu.prototype.noOp = function () {
-            //TODO: Write code 
+            //Nothing to see here, just incrementing the program counter
             this.increasePC(1);
         };
         Cpu.prototype.breakProcess = function () {
@@ -154,6 +140,9 @@ var TSOS;
         };
         Cpu.prototype.sysCall = function () {
             //TODO: Write code 
+        };
+        Cpu.prototype.getNextByte = function () {
+            return parseInt(((this.memory[this.PC + 1]).toString()), 16);
         };
         return Cpu;
     }());

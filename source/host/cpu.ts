@@ -17,21 +17,6 @@
 
 module TSOS {
     
-    class Byte {
-        public byte: String;
-        constructor(hex: String) {
-          this.byte = hex;  
-        }
-    }
-    
-    class Memory {
-        public bytes: Byte[] = [];
-        constructor(size: Number) {
-            for (var i = 0; i < size; i++) {
-               this.bytes[i] = new Byte("00");
-            }
-        }
-    }
     
     export class Cpu {
 
@@ -119,7 +104,8 @@ module TSOS {
         }
         
         public loadAccWithConst(): void {
-           //TODO: Write code 
+           this.Acc = this.getNextByte();
+           this.increasePC(2);
         }
         
         public loadAccFromMem(): void {
@@ -151,7 +137,7 @@ module TSOS {
         }
         
         public noOp(): void {
-           //TODO: Write code 
+           //Nothing to see here, just incrementing the program counter
            this.increasePC(1);
         }
         
@@ -175,9 +161,8 @@ module TSOS {
            //TODO: Write code 
         }
         
-        //public readNextByte(): String{
-        //    var location = location + this.PC;
-        //    return this.memory[location].byte;
-        //}
+        public getNextByte(): number{
+            return parseInt(((this.memory[this.PC + 1]).toString()),16);
+        }
     }
 }
