@@ -109,11 +109,14 @@ module TSOS {
         }
         
         public loadAccFromMem(): void {
-           //TODO: Write code 
+           this.Acc = this.getNextTwoBytes();
+           this.increasePC(3);
         }
         
         public storeAccInMem(): void {
-           //TODO: Write code 
+           let address = this.getNextTwoBytes();
+           this.writeByte(address, this.Acc.toString());
+           this.increasePC(3);
         }
         
         public addWithCarry(): void {
@@ -163,6 +166,17 @@ module TSOS {
         
         public getNextByte(): number{
             return parseInt(((this.memory[this.PC + 1]).toString()),16);
+        }
+        
+        public getNextTwoBytes(): number{
+            return parseInt(((this.memory[this.PC + 2]).toString()) + ((this.memory[this.PC + 1]).toString()),16);
+        }
+        
+        public writeByte (loc: number, byte: string) {
+            if(byte.length < 2) {
+                byte = "0" + byte;
+            }
+            this.memory[loc] = new Byte(byte);
         }
     }
 }

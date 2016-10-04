@@ -102,10 +102,13 @@ var TSOS;
             this.increasePC(2);
         };
         Cpu.prototype.loadAccFromMem = function () {
-            //TODO: Write code 
+            this.Acc = this.getNextTwoBytes();
+            this.increasePC(3);
         };
         Cpu.prototype.storeAccInMem = function () {
-            //TODO: Write code 
+            var address = this.getNextTwoBytes();
+            this.writeByte(address, this.Acc.toString());
+            this.increasePC(3);
         };
         Cpu.prototype.addWithCarry = function () {
             //TODO: Write code 
@@ -143,6 +146,15 @@ var TSOS;
         };
         Cpu.prototype.getNextByte = function () {
             return parseInt(((this.memory[this.PC + 1]).toString()), 16);
+        };
+        Cpu.prototype.getNextTwoBytes = function () {
+            return parseInt(((this.memory[this.PC + 2]).toString()) + ((this.memory[this.PC + 1]).toString()), 16);
+        };
+        Cpu.prototype.writeByte = function (loc, byte) {
+            if (byte.length < 2) {
+                byte = "0" + byte;
+            }
+            this.memory[loc] = new TSOS.Byte(byte);
         };
         return Cpu;
     }());
