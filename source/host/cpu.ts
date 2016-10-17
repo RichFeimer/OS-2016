@@ -42,6 +42,7 @@ module TSOS {
 
         public memSize: Number = 768;
         public memory: Byte[];
+        public numOfBlocks: number = 3;
         
         public cycle(): void {
             _Kernel.krnTrace('CPU cycle');

@@ -69,6 +69,7 @@ module TSOS {
                 // Draw the text at the current X and Y coordinates.
                 _DrawingContext.drawText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, text);
                 // Move the current X position.
+                this.lineWrap();
                 var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text);
                 this.currentXPosition = this.currentXPosition + offset;
             }
@@ -98,9 +99,14 @@ module TSOS {
             }   
         }
         
-        
-        public canvasState(canvas) {
-            
+        public lineWrap() :void{
+            if(this.currentXPosition + 12 > _Canvas.width){
+                this.advanceLine();
+            }
         }
+        
+        //public canvasState(canvas) {
+            
+        //}
     }
  }

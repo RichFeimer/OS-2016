@@ -30,6 +30,7 @@ var TSOS;
             this.Zflag = Zflag;
             this.isExecuting = isExecuting;
             this.memSize = 768;
+            this.numOfBlocks = 3;
             var memry = new TSOS.Memory(this.memSize);
             this.memory = memry.bytes;
         }
