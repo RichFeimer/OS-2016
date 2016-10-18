@@ -349,14 +349,37 @@ module TSOS {
 		}
         
         public shellLoad(args) {
-            function isHex(h) {
-                let spaceRmv = h.replace(/ /g, '');
-                let check = parseInt(spaceRmv,16);
-                return (check.toString(16) === spaceRmv.toLowerCase());
-            }   
-            if (isHex((<HTMLInputElement>document.getElementById("taProgramInput")).value)) {_StdOut.putText("Valid code")}
-                else _StdOut.putText("Invalid code");
-		}
+            var userText = <HTMLInputElement>document.getElementById("taProgramInput");
+            var inputString = userText.value.trim();
+            var inputCount = 0;
+            //Check the code's validity
+            for (var i = 0; i < inputString.length; i++){
+                if (userText.value.length ==0){
+                    _StdOut.putText("You have to give me something to work with...");
+                }
+                if (inputString.charAt(i).match(/[0-9A-Fa-f\s]/g) != null){
+                    inputCount++;
+                }
+            }
+            if (inputCount == inputString.length){
+                var code = inputString.replace(/ /g, '');
+                _memManager.loadToMemory(code);
+                alert( _memManager.memory[1]);
+            }
+            else{_StdOut.putText("Your input is invalid.");
+            }
+            
+            
+            
+            //function isHex(h) {
+            //    let spaceRmv = h.replace(/ /g, '');
+            //    let check = parseInt(spaceRmv,16);
+            //    return (check.toString(16) === spaceRmv.toLowerCase());
+            //}   
+            //if (isHex(userText.value)) {_StdOut.putText("Valid code")}
+            //    else _StdOut.putText("Invalid code");
+		
+        }
         
         public shellPrompt(args) {
             if (args.length > 0) {

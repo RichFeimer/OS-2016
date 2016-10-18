@@ -1,9 +1,10 @@
 var TSOS;
 (function (TSOS) {
     var Memory = (function () {
-        function Memory(size) {
+        function Memory() {
             this.bytes = [];
-            for (var i = 0; i < size; i++) {
+            //initialize the array
+            for (var i = 0; i < 768; i++) {
                 this.bytes[i] = new Byte("00");
             }
         }
@@ -12,7 +13,7 @@ var TSOS;
     TSOS.Memory = Memory;
     var Byte = (function () {
         function Byte(hex) {
-            this.hex = hex;
+            this.byte = hex;
         }
         return Byte;
     }());

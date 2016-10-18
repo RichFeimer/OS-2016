@@ -29,10 +29,6 @@ var TSOS;
             this.Yreg = Yreg;
             this.Zflag = Zflag;
             this.isExecuting = isExecuting;
-            this.memSize = 768;
-            this.numOfBlocks = 3;
-            var memry = new TSOS.Memory(this.memSize);
-            this.memory = memry.bytes;
         }
         Cpu.prototype.init = function () {
             this.PC = 0;
@@ -99,23 +95,27 @@ var TSOS;
             this.PC = (this.PC + bytes);
         };
         Cpu.prototype.loadAccWithConst = function () {
-            this.Acc = this.getNextByte();
+            this.Acc = _memManager.getNextByte();
             this.increasePC(2);
         };
         Cpu.prototype.loadAccFromMem = function () {
-            this.Acc = this.getNextTwoBytes();
+            this.Acc = _memManager.getNextTwoBytes();
             this.increasePC(3);
         };
         Cpu.prototype.storeAccInMem = function () {
-            var address = this.getNextTwoBytes();
-            this.writeByte(address, this.Acc.toString());
+            var address = _memManager.getNextTwoBytes();
+            _memManager.writeByte(address, this.Acc.toString());
             this.increasePC(3);
         };
         Cpu.prototype.addWithCarry = function () {
-            //TODO: Write code 
+            var address = _memManager.getNextTwoBytes();
+            var sum = parseInt((_memManager.memory[address].byte), 16) + parseInt(this.Acc.toString(), 16);
+            this.Acc = sum;
+            this.increasePC(3);
         };
         Cpu.prototype.loadXRegWithConst = function () {
-            //TODO: Write code 
+            this.Xreg = _memManager.getNextByte();
+            this.increasePC(2);
         };
         Cpu.prototype.loadXRegFromMem = function () {
             //TODO: Write code 
@@ -144,18 +144,6 @@ var TSOS;
         };
         Cpu.prototype.sysCall = function () {
             //TODO: Write code 
-        };
-        Cpu.prototype.getNextByte = function () {
-            return parseInt(((this.memory[this.PC + 1]).toString()), 16);
-        };
-        Cpu.prototype.getNextTwoBytes = function () {
-            return parseInt(((this.memory[this.PC + 2]).toString()) + ((this.memory[this.PC + 1]).toString()), 16);
-        };
-        Cpu.prototype.writeByte = function (loc, byte) {
-            if (byte.length < 2) {
-                byte = "0" + byte;
-            }
-            this.memory[loc] = new TSOS.Byte(byte);
         };
         return Cpu;
     }());

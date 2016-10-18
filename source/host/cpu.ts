@@ -27,8 +27,6 @@ module TSOS {
                     public Zflag: number = 0,
                     public isExecuting: boolean = false) {
 
-                    var memry = new Memory(this.memSize);
-                    this.memory = memry.bytes;
         }
 
         public init(): void {
@@ -40,9 +38,6 @@ module TSOS {
             this.isExecuting = false;
         }
 
-        public memSize: Number = 768;
-        public memory: Byte[];
-        public numOfBlocks: number = 3;
         
         public cycle(): void {
             _Kernel.krnTrace('CPU cycle');
@@ -105,27 +100,31 @@ module TSOS {
         }
         
         public loadAccWithConst(): void {
-           this.Acc = this.getNextByte();
+           this.Acc = _memManager.getNextByte();
            this.increasePC(2);
         }
         
         public loadAccFromMem(): void {
-           this.Acc = this.getNextTwoBytes();
+           this.Acc = _memManager.getNextTwoBytes();
            this.increasePC(3);
         }
         
         public storeAccInMem(): void {
-           let address = this.getNextTwoBytes();
-           this.writeByte(address, this.Acc.toString());
+           let address = _memManager.getNextTwoBytes();
+           _memManager.writeByte(address, this.Acc.toString());
            this.increasePC(3);
         }
         
         public addWithCarry(): void {
-           //TODO: Write code 
+            let address = _memManager.getNextTwoBytes();
+            let sum: number = parseInt((_memManager.memory[address].byte), 16) + parseInt(this.Acc.toString(), 16);
+            this.Acc = sum;
+            this.increasePC(3);
         }
         
         public loadXRegWithConst(): void {
-           //TODO: Write code 
+           this.Xreg = _memManager.getNextByte();
+           this.increasePC(2);
         }
         
         public loadXRegFromMem(): void {
@@ -165,19 +164,6 @@ module TSOS {
            //TODO: Write code 
         }
         
-        public getNextByte(): number{
-            return parseInt(((this.memory[this.PC + 1]).toString()),16);
-        }
         
-        public getNextTwoBytes(): number{
-            return parseInt(((this.memory[this.PC + 2]).toString()) + ((this.memory[this.PC + 1]).toString()),16);
-        }
-        
-        public writeByte (loc: number, byte: string) {
-            if(byte.length < 2) {
-                byte = "0" + byte;
-            }
-            this.memory[loc] = new Byte(byte);
-        }
     }
 }
