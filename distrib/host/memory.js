@@ -1,5 +1,11 @@
 var TSOS;
 (function (TSOS) {
+    var Byte = (function () {
+        function Byte(hex) {
+        }
+        return Byte;
+    }());
+    TSOS.Byte = Byte;
     var Memory = (function () {
         function Memory() {
             this.bytes = [];
@@ -11,11 +17,4 @@ var TSOS;
         return Memory;
     }());
     TSOS.Memory = Memory;
-    var Byte = (function () {
-        function Byte(hex) {
-            this.byte = hex;
-        }
-        return Byte;
-    }());
-    TSOS.Byte = Byte;
 })(TSOS || (TSOS = {}));

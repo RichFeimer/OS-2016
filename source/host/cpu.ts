@@ -128,15 +128,20 @@ module TSOS {
         }
         
         public loadXRegFromMem(): void {
-           //TODO: Write code 
+            let address = _memManager.getNextTwoBytes();
+            this.Xreg = parseInt((_memManager.memory[address].byte), 16);
+            this.increasePC(3);
         }
         
         public loadYRegWithConst(): void {
-           //TODO: Write code 
+           this.Yreg = _memManager.getNextByte();
+           this.increasePC(2);
         }
         
         public loadYRegFromMem(): void {
-           //TODO: Write code 
+            let address = _memManager.getNextTwoBytes();
+            this.Yreg = parseInt((_memManager.memory[address].byte), 16);
+            this.increasePC(3);
         }
         
         public noOp(): void {
@@ -145,19 +150,41 @@ module TSOS {
         }
         
         public breakProcess(): void {
-           //TODO: Write code 
+           this.PC = 0;
+           this.Acc = 0;
+           this.Xreg = 0;
+           this.Yreg = 0;
+           this.Zflag = 0;
+           this.increasePC(1);
         }
         
         public compareToXReg(): void {
-           //TODO: Write code 
+           let address = _memManager.getNextTwoBytes();
+           let value = parseInt((_memManager.memory[address].byte), 16);
+           if(value == this.Xreg){
+               this.Zflag = 1;
+           } else {
+               this.Zflag = 0;
+           }
+           this.increasePC(3);
         }
         
+        //Branch n bytes if Zflag=0
         public branchNotEqual(): void {
-           //TODO: Write code 
+           let jump: number = _memManager.getNextByte();
+           this.increasePC(2);
+           if(this.Zflag == 0){
+               this.increasePC(jump);
+           }
         }
         
         public incrByteVal(): void {
-           //TODO: Write code 
+           let address = _memManager.getNextTwoBytes();
+           let data: string = _memManager.memory[address].byte
+           let value: number = parseInt(data, 16);
+           value++;
+           _memManager.writeByte(address, value.toString(16));
+           this.increasePC(3);
         }
         
         public sysCall(): void {

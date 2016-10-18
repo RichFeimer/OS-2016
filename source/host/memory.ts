@@ -1,5 +1,12 @@
 
 module TSOS {
+    
+    export class Byte {
+        public byte: string;
+        constructor(hex: string) {
+        }
+    }
+    
     export class Memory {
     public bytes: Byte[] = [];
         constructor() {
@@ -10,10 +17,4 @@ module TSOS {
         }
     }
     
-    export class Byte {
-        public byte: string;
-        constructor(hex: string) {
-            this.byte = hex;
-        }
-    }
 }

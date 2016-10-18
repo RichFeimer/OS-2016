@@ -30,6 +30,7 @@ var TSOS;
             // This is called from index.html's onLoad event via the onDocumentLoad function pointer.
             // Get a global reference to the canvas.  TODO: Should we move this stuff into a Display Device Driver?
             _Canvas = document.getElementById('display');
+            _memoryTable = document.getElementById('memoryTable');
             // Get a global reference to the drawing context.
             _DrawingContext = _Canvas.getContext("2d");
             // Enable the added-in canvas text functions (see canvastext.ts for provenance and details).
@@ -40,6 +41,8 @@ var TSOS;
             // Set focus on the start button.
             // Use the TypeScript cast to HTMLInputElement
             document.getElementById("btnStartOS").focus();
+            //Create memory table
+            this.createMemoryTable();
             // Check for our testing and enrichment core, which
             // may be referenced here (from index.html) as function Glados().
             if (typeof Glados === "function") {
@@ -97,6 +100,38 @@ var TSOS;
             // That boolean parameter is the 'forceget' flag. When it is true it causes the page to always
             // be reloaded from the server. If it is false or not specified the browser may reload the
             // page from its cache, which is not what we want.
+        };
+        Control.createMemoryTable = function () {
+            for (var i = 0; i < 96; i++) {
+                var row = _memoryTable.insertRow(i);
+                for (var j = 0; j < 9; j++) {
+                    var cell = row.insertCell(j);
+                    if (j == 0) {
+                        var header = (i * 8).toString(16);
+                        cell.innerHTML = "0x" + header;
+                    }
+                    else {
+                        cell.innerHTML = "00";
+                    }
+                }
+            }
+        };
+        Control.updateMemoryTable = function () {
+            var counter = 0;
+            for (var i = 0; i < 96; i++) {
+                var rows = _memoryTable.rows[i];
+                for (var j = 0; j < 9; j++) {
+                    var cell = rows.cells[j];
+                    if (j == 0) {
+                        var header = (i * 8).toString(16);
+                        cell.innerHTML = "0x" + header;
+                    }
+                    else {
+                        cell.innerHTML = _memManager.memory[counter].byte;
+                        counter++;
+                    }
+                }
+            }
         };
         return Control;
     }());

@@ -28,6 +28,11 @@ module TSOS {
         private clearScreen(): void {
             _DrawingContext.clearRect(0, 0, _Canvas.width, _Canvas.height);
         }
+        
+        private clearLine():void{
+            _DrawingContext.clearRect( 0,this.currentYPosition-this.currentFontSize , _Canvas.width,this.currentFontSize+5);
+            this.currentXPosition=0;
+        }
 
         private resetXY(): void {
             this.currentXPosition = 0;
@@ -45,6 +50,9 @@ module TSOS {
                     _OsShell.handleInput(this.buffer);
                     // ... and reset our buffer.
                     this.buffer = "";
+                }else if (chr === String.fromCharCode(8)){
+                    this.backspace();
+                    
                 } else {
                     // This is a "normal" character, so ...
                     // ... draw it on the screen...
@@ -103,6 +111,17 @@ module TSOS {
             if(this.currentXPosition + 12 > _Canvas.width){
                 this.advanceLine();
             }
+        }
+        
+        public backspace():void {
+            var buffSize = this.buffer.length;
+            var lastLetter = buffSize - 1;
+            var chr = CanvasTextFunctions.letter(this.buffer.charAt(lastLetter));
+            this.buffer=this.buffer.substring(0, lastLetter);
+            _Kernel.krnTrace("Buffer Length =" + buffSize + " Buffer= " + this.buffer);
+            _Kernel.krnTrace("character= "+chr.toString());
+            this.clearLine();
+            this.putText(">"+this.buffer);
         }
         
         //public canvasState(canvas) {

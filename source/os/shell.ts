@@ -104,9 +104,16 @@ module TSOS {
             					  "<string> - Sets the status.")
             this.commandList[this.commandList.length] = sc;
             
+            // load
             sc = new ShellCommand(this.shellLoad,
                                   "load",
             					  "- Validates the user code.")
+            this.commandList[this.commandList.length] = sc;
+            
+            // run
+            sc = new ShellCommand(this.shellRun,
+                                  "run",
+            					  "<PID> - runs a program in memory")
             this.commandList[this.commandList.length] = sc;
             
             // prompt <string>
@@ -369,8 +376,6 @@ module TSOS {
             else{_StdOut.putText("Your input is invalid.");
             }
             
-            
-            
             //function isHex(h) {
             //    let spaceRmv = h.replace(/ /g, '');
             //    let check = parseInt(spaceRmv,16);
@@ -379,6 +384,10 @@ module TSOS {
             //if (isHex(userText.value)) {_StdOut.putText("Valid code")}
             //    else _StdOut.putText("Invalid code");
 		
+        }
+        
+        public shellRun(args) {
+            
         }
         
         public shellPrompt(args) {

@@ -32,7 +32,8 @@ module TSOS {
 
             // Get a global reference to the canvas.  TODO: Should we move this stuff into a Display Device Driver?
             _Canvas = <HTMLCanvasElement>document.getElementById('display');
-
+            _memoryTable = <HTMLTableElement> document.getElementById('memoryTable');
+            
             // Get a global reference to the drawing context.
             _DrawingContext = _Canvas.getContext("2d");
 
@@ -47,6 +48,9 @@ module TSOS {
             // Use the TypeScript cast to HTMLInputElement
             (<HTMLInputElement> document.getElementById("btnStartOS")).focus();
 
+            //Create memory table
+            this.createMemoryTable();
+            
             // Check for our testing and enrichment core, which
             // may be referenced here (from index.html) as function Glados().
             if (typeof Glados === "function") {
@@ -117,5 +121,42 @@ module TSOS {
             // be reloaded from the server. If it is false or not specified the browser may reload the
             // page from its cache, which is not what we want.
         }
+        
+        public static createMemoryTable():void {
+            for(var i = 0; i <96; i++){
+                var row = <HTMLTableRowElement> _memoryTable.insertRow(i);
+                for(var j = 0; j < 9; j++){
+                    var cell = row.insertCell(j);
+                    if(j == 0){
+                        var header = (i*8).toString(16);
+                        cell.innerHTML = "0x" + header;
+                    }else{
+                        cell.innerHTML = "00";
+                    }
+                }
+            }
+        }
+        
+        public static updateMemoryTable():void{
+            var counter = 0;
+
+            for(var i = 0; i < 96; i++){
+                var rows = <HTMLTableRowElement>_memoryTable.rows[i];
+                for(var j = 0; j < 9; j++){
+                    var cell = <HTMLElement>rows.cells[j];
+                    if(j == 0){
+                        var header = (i*8).toString(16);
+                        cell.innerHTML = "0x" + header;
+                    }
+                    else{
+                        cell.innerHTML = _memManager.memory[counter].byte;
+                        counter++;
+                    }
+                }
+            }
+        }
+        
+        
+        
     }
 }

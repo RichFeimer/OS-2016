@@ -118,29 +118,57 @@ var TSOS;
             this.increasePC(2);
         };
         Cpu.prototype.loadXRegFromMem = function () {
-            //TODO: Write code 
+            var address = _memManager.getNextTwoBytes();
+            this.Xreg = parseInt((_memManager.memory[address].byte), 16);
+            this.increasePC(3);
         };
         Cpu.prototype.loadYRegWithConst = function () {
-            //TODO: Write code 
+            this.Yreg = _memManager.getNextByte();
+            this.increasePC(2);
         };
         Cpu.prototype.loadYRegFromMem = function () {
-            //TODO: Write code 
+            var address = _memManager.getNextTwoBytes();
+            this.Yreg = parseInt((_memManager.memory[address].byte), 16);
+            this.increasePC(3);
         };
         Cpu.prototype.noOp = function () {
             //Nothing to see here, just incrementing the program counter
             this.increasePC(1);
         };
         Cpu.prototype.breakProcess = function () {
-            //TODO: Write code 
+            this.PC = 0;
+            this.Acc = 0;
+            this.Xreg = 0;
+            this.Yreg = 0;
+            this.Zflag = 0;
+            this.increasePC(1);
         };
         Cpu.prototype.compareToXReg = function () {
-            //TODO: Write code 
+            var address = _memManager.getNextTwoBytes();
+            var value = parseInt((_memManager.memory[address].byte), 16);
+            if (value == this.Xreg) {
+                this.Zflag = 1;
+            }
+            else {
+                this.Zflag = 0;
+            }
+            this.increasePC(3);
         };
+        //Branch n bytes if Zflag=0
         Cpu.prototype.branchNotEqual = function () {
-            //TODO: Write code 
+            var jump = _memManager.getNextByte();
+            this.increasePC(2);
+            if (this.Zflag == 0) {
+                this.increasePC(jump);
+            }
         };
         Cpu.prototype.incrByteVal = function () {
-            //TODO: Write code 
+            var address = _memManager.getNextTwoBytes();
+            var data = _memManager.memory[address].byte;
+            var value = parseInt(data, 16);
+            value++;
+            _memManager.writeByte(address, value.toString(16));
+            this.increasePC(3);
         };
         Cpu.prototype.sysCall = function () {
             //TODO: Write code 

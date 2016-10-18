@@ -6,6 +6,8 @@ module TSOS{
         public memory: Byte[];
         public numOfBlocks: number = 3;
         public base: number = 0;
+        public limit: number = 255;
+        public counter: number = 0;
         public memCursor: number = this.base;
         
         constructor() {
@@ -19,7 +21,12 @@ module TSOS{
                 
                 this.memory[this.memCursor] = new Byte(toByte);
                 this.memCursor++;
+                Control.updateMemoryTable();
             }
+            
+            _process = new pcb();
+            _process.init(_pid, this.base, this.limit, this.counter);
+            _StdOut.putText("Load sucessful. PID = " + _process.pid);
         }
         
         public getNextByte(): number{

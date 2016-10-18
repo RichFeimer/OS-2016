@@ -61,7 +61,11 @@ var TSOS;
             // status
             sc = new TSOS.ShellCommand(this.shellStatus, "status", "<string> - Sets the status.");
             this.commandList[this.commandList.length] = sc;
+            // load
             sc = new TSOS.ShellCommand(this.shellLoad, "load", "- Validates the user code.");
+            this.commandList[this.commandList.length] = sc;
+            // run
+            sc = new TSOS.ShellCommand(this.shellRun, "run", "<PID> - runs a program in memory");
             this.commandList[this.commandList.length] = sc;
             // prompt <string>
             sc = new TSOS.ShellCommand(this.shellPrompt, "prompt", "<string> - Sets the prompt.");
@@ -313,6 +317,8 @@ var TSOS;
             //}   
             //if (isHex(userText.value)) {_StdOut.putText("Valid code")}
             //    else _StdOut.putText("Invalid code");
+        };
+        Shell.prototype.shellRun = function (args) {
         };
         Shell.prototype.shellPrompt = function (args) {
             if (args.length > 0) {
