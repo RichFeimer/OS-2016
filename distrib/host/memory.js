@@ -2,6 +2,7 @@ var TSOS;
 (function (TSOS) {
     var Byte = (function () {
         function Byte(hex) {
+            this.byte = hex;
         }
         return Byte;
     }());

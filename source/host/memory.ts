@@ -4,6 +4,7 @@ module TSOS {
     export class Byte {
         public byte: string;
         constructor(hex: string) {
+            this.byte = hex;
         }
     }
     
