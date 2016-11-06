@@ -371,8 +371,18 @@ module TSOS {
                         }
                     }
                     if (inputCount == code.length && typeof code !== 'undefined'){
-                        _memManager.loadToMemory(code);
+                        
+                       //try{ 
+                       if (_mem instanceof TSOS.Memory){_StdOut.putText("true")}
+                        //_StdOut.putText(_CPU instanceof TSOS.Cpu);
+                        //_memManager.test(code);
                         //alert( _memManager.memory[1]);
+                       //}catch(e){
+                        //   if(e){
+                        //       _StdOut.putText("Input could not be loaded");
+                          // }
+                       //}
+                        
                     }
                     else{_StdOut.putText("Your input is invalid.");
                     }

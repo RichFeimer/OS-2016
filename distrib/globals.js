@@ -26,6 +26,8 @@ var _mem;
 var _memoryTable;
 var _process;
 var _pid = 0;
+var _readyQueue;
+var _currentProcess;
 var _Control;
 var _OSclock = 0; // Page 23.
 var _Mode = 0; // (currently unused)  0 = Kernel Mode, 1 = User Mode.  See page 21.

@@ -1,5 +1,7 @@
+///<reference path="../globals.ts" />
 
 module TSOS {
+    
     
     export class Byte {
         public byte: string;
@@ -10,11 +12,13 @@ module TSOS {
     
     export class Memory {
     public bytes: Byte[] = [];
-        constructor() {
+        constructor(public size: number) {}
+            public init():void {
             //initialize the array
-            for (var i = 0; i < 768; i++) {
+            for (var i = 0; i < this.size; i++) {
                this.bytes[i] = new Byte("00");
             }
+            
         }
     }
     

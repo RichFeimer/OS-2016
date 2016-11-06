@@ -1,9 +1,11 @@
+///<reference path="../globals.ts" />
 
-module TSOS{
-    export class memoryManager {
+module TSOS {
+
+export class memoryManager {
         
-        public memSize: Number = 768;
-        public memory: Byte[];
+        public memSize: number = 768;
+        public memory = new Memory(this.memSize).bytes;
         public numOfBlocks: number = 3;
         public base: number = 0;
         public limit: number = 255;
@@ -11,8 +13,14 @@ module TSOS{
         public memCursor: number = this.base;
         
         constructor() {
-            var memry = new Memory();
-            this.memory = memry.bytes;
+        //    var memry = new Memory(this.memSize);
+        //    this.memory = memry.bytes;
+            
+        }
+        
+        
+        public test(code: string):void{
+            _StdOut.putText(code);
         }
         
         public loadToMemory(code: string):void {
@@ -42,6 +50,10 @@ module TSOS{
                 byte = "0" + byte;
             }
             this.memory[loc] = new Byte(byte);
+        }
+        
+        public readByte (loc: number):Byte{
+            return this.memory[loc];
         }
     
     }

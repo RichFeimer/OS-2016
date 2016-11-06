@@ -1,16 +1,21 @@
+///<reference path="../globals.ts" />
 var TSOS;
 (function (TSOS) {
     var memoryManager = (function () {
         function memoryManager() {
+            //    var memry = new Memory(this.memSize);
+            //    this.memory = memry.bytes;
             this.memSize = 768;
+            this.memory = new TSOS.Memory(this.memSize).bytes;
             this.numOfBlocks = 3;
             this.base = 0;
             this.limit = 255;
             this.counter = 0;
             this.memCursor = this.base;
-            var memry = new TSOS.Memory();
-            this.memory = memry.bytes;
         }
+        memoryManager.prototype.test = function (code) {
+            _StdOut.putText(code);
+        };
         memoryManager.prototype.loadToMemory = function (code) {
             for (var i = 0; i < code.length; i += 2) {
                 var toByte = code.charAt(i) + code.charAt(i + 1);
@@ -33,6 +38,9 @@ var TSOS;
                 byte = "0" + byte;
             }
             this.memory[loc] = new TSOS.Byte(byte);
+        };
+        memoryManager.prototype.readByte = function (loc) {
+            return this.memory[loc];
         };
         return memoryManager;
     }());

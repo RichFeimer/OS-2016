@@ -37,12 +37,24 @@ module TSOS {
             this.Zflag = 0;
             this.isExecuting = false;
         }
+        
+        public updateCPU(currentProcess: pcb):void {
+            this.PC = currentProcess.PC;
+            this.Acc = currentProcess.Acc;
+            this.Xreg = currentProcess.Xreg;
+            this.Yreg = currentProcess.Yreg;
+            this.Zflag = currentProcess.Zflag;
+        }
 
         
         public cycle(): void {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
+            if(this.isExecuting){
+                let opcode = _memManager.readByte(this.PC);
+                this.execute(opcode);
+            }
         }
         
         public execute(instr) : void {

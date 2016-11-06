@@ -31,6 +31,8 @@ var _mem: TSOS.Memory;
 var _memoryTable: HTMLTableElement;
 var _process: TSOS.pcb;
 var _pid: number = 0;
+var _readyQueue;
+var _currentProcess;
 var _Control: TSOS.Control;
 var _OSclock: number = 0;  // Page 23.
 

@@ -305,7 +305,10 @@ var TSOS;
                     }
                 }
                 if (inputCount == code.length && typeof code !== 'undefined') {
-                    _memManager.loadToMemory(code);
+                    //try{ 
+                    if (_mem instanceof TSOS.Memory) {
+                        _StdOut.putText("true");
+                    }
                 }
                 else {
                     _StdOut.putText("Your input is invalid.");
