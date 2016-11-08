@@ -10,8 +10,8 @@
 //
 // Global CONSTANTS (TypeScript 1.5 introduced const. Very cool.)
 //
-var APP_NAME = "XOS?"; // 'cause Bob and I were at a loss for a better name.
-var APP_VERSION = "0.5"; // What did you expect?
+var APP_NAME = "OSwyn"; // 'cause Bob and I were at a loss for a better name.
+var APP_VERSION = "0.7"; // What did you expect?
 var CPU_CLOCK_INTERVAL = 100; // This is in ms (milliseconds) so 1000 = 1 second.
 var TIMER_IRQ = 0; // Pages 23 (timer), 9 (interrupts), and 561 (interrupt priority).
 // NOTE: The timer is different from hardware/host clock pulses. Don't confuse these.
@@ -24,6 +24,7 @@ var _CPU; // Utilize TypeScript's type annotation system to ensure that _CPU is 
 var _memManager;
 var _mem;
 var _memoryTable;
+var _cpuTable;
 var _process;
 var _pid = 0;
 var _readyQueue;

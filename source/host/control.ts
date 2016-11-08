@@ -138,14 +138,14 @@ module TSOS {
         }
         
         public static updateMemoryTable():void{
-            var counter = 0;
+            let counter = 0;
 
-            for(var i = 0; i < 96; i++){
-                var rows = <HTMLTableRowElement>_memoryTable.rows[i];
-                for(var j = 0; j < 9; j++){
-                    var cell = <HTMLElement>rows.cells[j];
+            for(let i = 0; i < 96; i++){
+                let rows = <HTMLTableRowElement>_memoryTable.rows[i];
+                for(let j = 0; j < 9; j++){
+                    let cell = <HTMLElement>rows.cells[j];
                     if(j == 0){
-                        var header = (i*8).toString(16);
+                        let header = (i*8).toString(16);
                         cell.innerHTML = "0x" + header;
                     }
                     else{
@@ -155,6 +155,27 @@ module TSOS {
                 }
             }
         }
+        
+        public static updateCpuTable():void{
+            let rows = <HTMLTableRowElement>_cpuTable.rows[1];
+            let cells = <HTMLElement>rows.cells[0];
+            
+            cells.innerHTML = _CPU.PC.toString();
+            cells = <HTMLElement>rows.cells[1];
+            cells.innerHTML = _memManager.memory[_CPU.PC].byte;
+            cells = <HTMLElement>rows.cells[2];
+            cells.innerHTML = _CPU.Acc.toString();
+            cells = <HTMLElement>rows.cells[3];
+            cells.innerHTML = _CPU.Xreg.toString();
+            cells = <HTMLElement>rows.cells[4];
+            cells.innerHTML = _CPU.Yreg.toString();
+            cells = <HTMLElement>rows.cells[5];
+            cells.innerHTML = _CPU.Zflag.toString();
+        }
+        
+        
+        
+        
         
         
         

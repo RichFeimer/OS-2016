@@ -117,7 +117,7 @@ module TSOS {
             var buffSize = this.buffer.length;
             var lastLetter = buffSize - 1;
             var chr = CanvasTextFunctions.letter(this.buffer.charAt(lastLetter));
-            this.buffer=this.buffer.substring(0, lastLetter);
+            this.buffer = this.buffer.substring(0, lastLetter);
             _Kernel.krnTrace("Buffer Length =" + buffSize + " Buffer= " + this.buffer);
             _Kernel.krnTrace("character= "+chr.toString());
             this.clearLine();

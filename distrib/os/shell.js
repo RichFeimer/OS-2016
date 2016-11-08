@@ -65,7 +65,13 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellLoad, "load", "- Validates the user code.");
             this.commandList[this.commandList.length] = sc;
             // run
-            sc = new TSOS.ShellCommand(this.shellRun, "run", "<PID> - runs a program in memory");
+            sc = new TSOS.ShellCommand(this.shellRun, "run", "<PID> - executes a program in memory");
+            this.commandList[this.commandList.length] = sc;
+            // clear memory
+            sc = new TSOS.ShellCommand(this.shellClearMem, "clearMem", "- clears the memory");
+            this.commandList[this.commandList.length] = sc;
+            // runall
+            sc = new TSOS.ShellCommand(this.shellRunall, "runall", " - executes all programs in memory");
             this.commandList[this.commandList.length] = sc;
             // prompt <string>
             sc = new TSOS.ShellCommand(this.shellPrompt, "prompt", "<string> - Sets the prompt.");
@@ -305,9 +311,15 @@ var TSOS;
                     }
                 }
                 if (inputCount == code.length && typeof code !== 'undefined') {
-                    //try{ 
-                    if (_mem instanceof TSOS.Memory) {
-                        _StdOut.putText("true");
+                    try {
+                        //if (_mem instanceof TSOS.Memory){_StdOut.putText("true")}
+                        //_StdOut.putText(_CPU instanceof TSOS.Cpu);
+                        _memManager.test(code);
+                    }
+                    catch (e) {
+                        if (e) {
+                            _StdOut.putText("Input could not be loaded");
+                        }
                     }
                 }
                 else {
@@ -316,6 +328,10 @@ var TSOS;
             }
         };
         Shell.prototype.shellRun = function (args) {
+        };
+        Shell.prototype.shellClearMem = function (args) {
+        };
+        Shell.prototype.shellRunall = function (args) {
         };
         Shell.prototype.shellPrompt = function (args) {
             if (args.length > 0) {

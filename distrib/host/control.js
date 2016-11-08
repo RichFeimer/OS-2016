@@ -133,6 +133,21 @@ var TSOS;
                 }
             }
         };
+        Control.updateCpuTable = function () {
+            var rows = _cpuTable.rows[1];
+            var cells = rows.cells[0];
+            cells.innerHTML = _CPU.PC.toString();
+            cells = rows.cells[1];
+            cells.innerHTML = _memManager.memory[_CPU.PC].byte;
+            cells = rows.cells[2];
+            cells.innerHTML = _CPU.Acc.toString();
+            cells = rows.cells[3];
+            cells.innerHTML = _CPU.Xreg.toString();
+            cells = rows.cells[4];
+            cells.innerHTML = _CPU.Yreg.toString();
+            cells = rows.cells[5];
+            cells.innerHTML = _CPU.Zflag.toString();
+        };
         return Control;
     }());
     TSOS.Control = Control;

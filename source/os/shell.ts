@@ -113,7 +113,19 @@ module TSOS {
             // run
             sc = new ShellCommand(this.shellRun,
                                   "run",
-            					  "<PID> - runs a program in memory")
+            					  "<PID> - executes a program in memory")
+            this.commandList[this.commandList.length] = sc;
+            
+            // clear memory
+            sc = new ShellCommand(this.shellClearMem,
+                                  "clearMem",
+            					  "- clears the memory")
+            this.commandList[this.commandList.length] = sc;
+            
+            // runall
+            sc = new ShellCommand(this.shellRunall,
+                                  "runall",
+            					  " - executes all programs in memory")
             this.commandList[this.commandList.length] = sc;
             
             // prompt <string>
@@ -372,16 +384,16 @@ module TSOS {
                     }
                     if (inputCount == code.length && typeof code !== 'undefined'){
                         
-                       //try{ 
-                       if (_mem instanceof TSOS.Memory){_StdOut.putText("true")}
+                       try{ 
+                       //if (_mem instanceof TSOS.Memory){_StdOut.putText("true")}
                         //_StdOut.putText(_CPU instanceof TSOS.Cpu);
-                        //_memManager.test(code);
+                        _memManager.test(code);
                         //alert( _memManager.memory[1]);
-                       //}catch(e){
-                        //   if(e){
-                        //       _StdOut.putText("Input could not be loaded");
-                          // }
-                       //}
+                       }catch(e){
+                           if(e){
+                               _StdOut.putText("Input could not be loaded");
+                           }
+                       }
                         
                     }
                     else{_StdOut.putText("Your input is invalid.");
@@ -398,6 +410,14 @@ module TSOS {
                 }
         }
         public shellRun(args) {
+            
+        }
+        
+        public shellClearMem(args) {
+            
+        }
+        
+        public shellRunall(args) {
             
         }
         
