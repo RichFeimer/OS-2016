@@ -23,9 +23,11 @@ module TSOS {
         public curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
         public apologies = "[sorry]";
         public _memManager;
+        public _cpuSched;
         
         constructor() {
             _memManager = new TSOS.memoryManager();
+            _cpuSched = new TSOS.cpuScheduler();
         }
         
         
@@ -437,7 +439,16 @@ module TSOS {
         }
         
         public shellRunall(args) {
-            
+            let counter = 0;
+            for(var i = 0; i < _residentList.length; i++){
+                _StdOut.putText("RLC " + _residentList[counter].pid);
+                _readyQueue.enqueue(_residentList[counter]);
+                _Kernel.krnTrace("SIZE OF QUEUE = " + _residentList.length);
+                _Kernel.krnTrace("FIRST PID =  " + _readyQueue.index(0).pid.toString());
+                
+                counter++;
+            }
+            //_cpuSched.beginExecution();
         }
         
         public shellPrompt(args) {

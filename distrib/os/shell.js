@@ -21,6 +21,7 @@ var TSOS;
             this.curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
             this.apologies = "[sorry]";
             _memManager = new TSOS.memoryManager();
+            _cpuSched = new TSOS.cpuScheduler();
         }
         Shell.prototype.init = function () {
             var sc;
@@ -344,6 +345,15 @@ var TSOS;
             _StdOut.putText("Memory cleared");
         };
         Shell.prototype.shellRunall = function (args) {
+            var counter = 0;
+            for (var i = 0; i < _residentList.length; i++) {
+                _StdOut.putText("RLC " + _residentList[counter].pid);
+                _readyQueue.enqueue(_residentList[counter]);
+                _Kernel.krnTrace("SIZE OF QUEUE = " + _residentList.length);
+                _Kernel.krnTrace("FIRST PID =  " + _readyQueue.index(0).pid.toString());
+                counter++;
+            }
+            //_cpuSched.beginExecution();
         };
         Shell.prototype.shellPrompt = function (args) {
             if (args.length > 0) {

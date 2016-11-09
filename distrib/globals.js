@@ -23,8 +23,10 @@ var KEYBOARD_IRQ = 1;
 var _CPU; // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class.
 var _mem;
 var _memManager;
+var _cpuSched;
 var _memoryTable;
 var _cpuTable;
+var _pcbTable;
 var _process;
 var _pid = 0;
 var _readyQueue;

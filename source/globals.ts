@@ -28,8 +28,10 @@ const KEYBOARD_IRQ: number = 1;
 var _CPU: TSOS.Cpu;  // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class.
 var _mem: TSOS.Memory;
 var _memManager: TSOS.memoryManager;
+var _cpuSched: TSOS.cpuScheduler;
 var _memoryTable: HTMLTableElement;
 var _cpuTable: HTMLTableElement;
+var _pcbTable: HTMLTableElement;
 var _process: TSOS.pcb;
 var _pid: number = 0;
 var _readyQueue;

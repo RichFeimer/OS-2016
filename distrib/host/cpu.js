@@ -63,6 +63,7 @@ var TSOS;
                 //_StdOut.putText("opcode = " + opcode);
                 this.execute(opcode.toString(16));
                 TSOS.Control.updateCpuTable();
+                TSOS.Control.updatePcbTable();
             }
         };
         Cpu.prototype.execute = function (instr) {

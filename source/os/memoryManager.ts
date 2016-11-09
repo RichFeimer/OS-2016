@@ -24,6 +24,7 @@ export class memoryManager {
         }
         
         public loadToMemory(code: string):void {
+          if((code.length/2) > 256){
             for (var i = 0; i < code.length; i += 2) {
                 var toByte = code.charAt(i) + code.charAt(i+1);
                 
@@ -46,6 +47,7 @@ export class memoryManager {
             this.base = this.limit + 1;
             this.limit = this.limit + 256;
             this.memCursor = this.base;
+          }
         }
         
         public clearMemory():void{

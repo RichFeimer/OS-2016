@@ -68,6 +68,7 @@ module TSOS {
                 //_StdOut.putText("opcode = " + opcode);
                 this.execute(opcode.toString(16));
                 Control.updateCpuTable();
+                Control.updatePcbTable();
             }
         }
         

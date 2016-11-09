@@ -17,21 +17,23 @@ var TSOS;
             _StdOut.putText(code);
         };
         memoryManager.prototype.loadToMemory = function (code) {
-            for (var i = 0; i < code.length; i += 2) {
-                var toByte = code.charAt(i) + code.charAt(i + 1);
-                this.memory[this.memCursor] = new TSOS.Byte(toByte);
-                this.memCursor++;
+            if ((code.length / 2) > 256) {
+                for (var i = 0; i < code.length; i += 2) {
+                    var toByte = code.charAt(i) + code.charAt(i + 1);
+                    this.memory[this.memCursor] = new TSOS.Byte(toByte);
+                    this.memCursor++;
+                }
+                var _process = new TSOS.pcb();
+                _process.init(_pid, this.base, this.limit, this.counter);
+                _StdOut.putText("Load sucessful. PID = " + _process.pid);
+                _residentList.push(_process);
+                _pid++;
+                TSOS.Control.updateMemoryTable();
+                this.counter = this.limit + 1;
+                this.base = this.limit + 1;
+                this.limit = this.limit + 256;
+                this.memCursor = this.base;
             }
-            var _process = new TSOS.pcb();
-            _process.init(_pid, this.base, this.limit, this.counter);
-            _StdOut.putText("Load sucessful. PID = " + _process.pid);
-            _residentList.push(_process);
-            _pid++;
-            TSOS.Control.updateMemoryTable();
-            this.counter = this.limit + 1;
-            this.base = this.limit + 1;
-            this.limit = this.limit + 256;
-            this.memCursor = this.base;
         };
         memoryManager.prototype.clearMemory = function () {
             for (var i = 0; i < this.memory.length; i++) {

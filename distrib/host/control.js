@@ -32,6 +32,7 @@ var TSOS;
             _Canvas = document.getElementById('display');
             _memoryTable = document.getElementById('memoryTable');
             _cpuTable = document.getElementById('cpuTable');
+            _pcbTable = document.getElementById('pcbQueueTable');
             // Get a global reference to the drawing context.
             _DrawingContext = _Canvas.getContext("2d");
             // Enable the added-in canvas text functions (see canvastext.ts for provenance and details).
@@ -157,6 +158,75 @@ var TSOS;
             cells.innerHTML = _CPU.Zflag.toString();
         };
         Control.updatePcbTable = function () {
+            if (_currentProcess != null) {
+                var rows = _pcbTable.rows[1];
+                var cells = rows.cells[0];
+                cells.innerHTML = _currentProcess.pid.toString();
+                cells = rows.cells[1];
+                cells.innerHTML = _currentProcess.PC.toString();
+                cells = rows.cells[2];
+                cells.innerHTML = _CPU.IR;
+                cells = rows.cells[3];
+                cells.innerHTML = _currentProcess.Acc.toString();
+                cells = rows.cells[4];
+                cells.innerHTML = _currentProcess.Xreg.toString();
+                cells = rows.cells[5];
+                cells.innerHTML = _currentProcess.Yreg.toString();
+                cells = rows.cells[6];
+                cells.innerHTML = _currentProcess.Zflag.toString();
+                cells = rows.cells[7];
+                cells.innerHTML = _currentProcess.base.toString();
+                cells = rows.cells[8];
+                cells.innerHTML = _currentProcess.limit.toString();
+                cells = rows.cells[9];
+                cells.innerHTML = _currentProcess.state.toString();
+            }
+            if (_readyQueue.index(0) != null) {
+                rows = _pcbTable.rows[2];
+                cells = rows.cells[0];
+                cells.innerHTML = _readyQueue.index(0).pid.toString();
+                cells = rows.cells[1];
+                cells.innerHTML = _readyQueue.index(0).PC.toString();
+                cells = rows.cells[2];
+                cells.innerHTML = _memManager.memory[_readyQueue.index(0).PC].byte;
+                cells = rows.cells[3];
+                cells.innerHTML = _readyQueue.index(0).Acc.toString();
+                cells = rows.cells[4];
+                cells.innerHTML = _readyQueue.index(0).Xreg.toString();
+                cells = rows.cells[5];
+                cells.innerHTML = _readyQueue.index(0).Yreg.toString();
+                cells = rows.cells[6];
+                cells.innerHTML = _readyQueue.index(0).Zflag.toString();
+                cells = rows.cells[7];
+                cells.innerHTML = _readyQueue.index(0).base.toString();
+                cells = rows.cells[8];
+                cells.innerHTML = _readyQueue.index(0).limit.toString();
+                cells = rows.cells[9];
+                cells.innerHTML = _readyQueue.index(0).state.toString();
+            }
+            if (_readyQueue.index(1) != null) {
+                rows = _pcbTable.rows[3];
+                cells = rows.cells[0];
+                cells.innerHTML = _readyQueue.index(1).pid.toString();
+                cells = rows.cells[1];
+                cells.innerHTML = _readyQueue.index(1).PC.toString();
+                cells = rows.cells[2];
+                cells.innerHTML = _memManager.memory[_readyQueue.index(1).PC].byte;
+                cells = rows.cells[3];
+                cells.innerHTML = _readyQueue.index(1).Acc.toString();
+                cells = rows.cells[4];
+                cells.innerHTML = _readyQueue.index(1).Xreg.toString();
+                cells = rows.cells[5];
+                cells.innerHTML = _readyQueue.index(1).Yreg.toString();
+                cells = rows.cells[6];
+                cells.innerHTML = _readyQueue.index(1).Zflag.toString();
+                cells = rows.cells[7];
+                cells.innerHTML = _readyQueue.index(1).base.toString();
+                cells = rows.cells[8];
+                cells.innerHTML = _readyQueue.index(1).limit.toString();
+                cells = rows.cells[9];
+                cells.innerHTML = _readyQueue.index(1).state.toString();
+            }
         };
         return Control;
     }());
