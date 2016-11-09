@@ -31,6 +31,7 @@ var TSOS;
             // Get a global reference to the canvas.  TODO: Should we move this stuff into a Display Device Driver?
             _Canvas = document.getElementById('display');
             _memoryTable = document.getElementById('memoryTable');
+            _cpuTable = document.getElementById('cpuTable');
             // Get a global reference to the drawing context.
             _DrawingContext = _Canvas.getContext("2d");
             // Enable the added-in canvas text functions (see canvastext.ts for provenance and details).
@@ -127,8 +128,15 @@ var TSOS;
                         cell.innerHTML = "0x" + header;
                     }
                     else {
-                        cell.innerHTML = _memManager.memory[counter].byte;
-                        counter++;
+                        try {
+                            cell.innerHTML = _memManager.memory[counter].byte;
+                            counter++;
+                        }
+                        catch (a) {
+                            if (a) {
+                                break;
+                            }
+                        }
                     }
                 }
             }
@@ -138,7 +146,7 @@ var TSOS;
             var cells = rows.cells[0];
             cells.innerHTML = _CPU.PC.toString();
             cells = rows.cells[1];
-            cells.innerHTML = _memManager.memory[_CPU.PC].byte;
+            cells.innerHTML = _CPU.IR;
             cells = rows.cells[2];
             cells.innerHTML = _CPU.Acc.toString();
             cells = rows.cells[3];
@@ -147,6 +155,8 @@ var TSOS;
             cells.innerHTML = _CPU.Yreg.toString();
             cells = rows.cells[5];
             cells.innerHTML = _CPU.Zflag.toString();
+        };
+        Control.updatePcbTable = function () {
         };
         return Control;
     }());

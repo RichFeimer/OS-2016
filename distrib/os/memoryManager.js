@@ -21,17 +21,29 @@ var TSOS;
                 var toByte = code.charAt(i) + code.charAt(i + 1);
                 this.memory[this.memCursor] = new TSOS.Byte(toByte);
                 this.memCursor++;
-                TSOS.Control.updateMemoryTable();
             }
-            _process = new TSOS.pcb();
+            var _process = new TSOS.pcb();
             _process.init(_pid, this.base, this.limit, this.counter);
             _StdOut.putText("Load sucessful. PID = " + _process.pid);
+            _residentList.push(_process);
+            _pid++;
+            TSOS.Control.updateMemoryTable();
+            this.counter = this.limit + 1;
+            this.base = this.limit + 1;
+            this.limit = this.limit + 256;
+            this.memCursor = this.base;
+        };
+        memoryManager.prototype.clearMemory = function () {
+            for (var i = 0; i < this.memory.length; i++) {
+                this.memory[i] = new TSOS.Byte("00");
+            }
+            TSOS.Control.updateMemoryTable();
         };
         memoryManager.prototype.getNextByte = function () {
-            return parseInt(((this.memory[_CPU.PC + 1]).toString()), 16);
+            return parseInt(((this.memory[_CPU.PC + 1].byte).toString()), 16);
         };
         memoryManager.prototype.getNextTwoBytes = function () {
-            return parseInt(((this.memory[_CPU.PC + 2]).toString()) + ((this.memory[_CPU.PC + 1]).toString()), 16);
+            return parseInt(((this.memory[_CPU.PC + 2].byte).toString()) + ((this.memory[_CPU.PC + 1].byte).toString()), 16);
         };
         memoryManager.prototype.writeByte = function (loc, byte) {
             if (byte.length < 2) {
@@ -40,7 +52,8 @@ var TSOS;
             this.memory[loc] = new TSOS.Byte(byte);
         };
         memoryManager.prototype.readByte = function (loc) {
-            return this.memory[loc];
+            //_StdOut.putText(this.memory[loc].byte.toString());
+            return parseInt(this.memory[loc].byte.toString(), 16);
         };
         return memoryManager;
     }());

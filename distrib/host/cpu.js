@@ -16,18 +16,20 @@
 var TSOS;
 (function (TSOS) {
     var Cpu = (function () {
-        function Cpu(PC, Acc, Xreg, Yreg, Zflag, isExecuting) {
+        function Cpu(PC, Acc, Xreg, Yreg, Zflag, IR, isExecuting) {
             if (PC === void 0) { PC = 0; }
             if (Acc === void 0) { Acc = 0; }
             if (Xreg === void 0) { Xreg = 0; }
             if (Yreg === void 0) { Yreg = 0; }
             if (Zflag === void 0) { Zflag = 0; }
+            if (IR === void 0) { IR = "00"; }
             if (isExecuting === void 0) { isExecuting = false; }
             this.PC = PC;
             this.Acc = Acc;
             this.Xreg = Xreg;
             this.Yreg = Yreg;
             this.Zflag = Zflag;
+            this.IR = IR;
             this.isExecuting = isExecuting;
         }
         Cpu.prototype.init = function () {
@@ -45,16 +47,28 @@ var TSOS;
             this.Yreg = currentProcess.Yreg;
             this.Zflag = currentProcess.Zflag;
         };
+        Cpu.prototype.updatePCB = function (CPU) {
+            _currentProcess.PC = this.PC;
+            _currentProcess.Acc = this.Acc;
+            _currentProcess.Xreg = this.Xreg;
+            _currentProcess.Yreg = this.Yreg;
+            _currentProcess.Zflag = this.Zflag;
+        };
         Cpu.prototype.cycle = function () {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
             if (this.isExecuting) {
                 var opcode = _memManager.readByte(this.PC);
-                this.execute(opcode);
+                //_StdOut.putText("opcode = " + opcode);
+                this.execute(opcode.toString(16));
+                TSOS.Control.updateCpuTable();
             }
         };
         Cpu.prototype.execute = function (instr) {
+            instr = instr.toLowerCase();
+            this.IR = instr;
+            //_StdOut.putText(instr);
             switch (instr) {
                 case "a9":
                     this.loadAccWithConst();
@@ -102,21 +116,24 @@ var TSOS;
                     this.breakProcess();
             }
         };
-        Cpu.prototype.increasePC = function (bytes) {
-            this.PC = (this.PC + bytes);
+        Cpu.prototype.increasePC = function (numBytes) {
+            this.PC = (this.PC + numBytes);
         };
         Cpu.prototype.loadAccWithConst = function () {
             this.Acc = _memManager.getNextByte();
             this.increasePC(2);
+            _Kernel.krnTrace("Const ACC = " + this.Acc);
         };
         Cpu.prototype.loadAccFromMem = function () {
             this.Acc = _memManager.getNextTwoBytes();
             this.increasePC(3);
+            _Kernel.krnTrace("Mem ACC = " + this.Acc);
         };
         Cpu.prototype.storeAccInMem = function () {
             var address = _memManager.getNextTwoBytes();
             _memManager.writeByte(address, this.Acc.toString());
             this.increasePC(3);
+            _Kernel.krnTrace("ACC Stored");
         };
         Cpu.prototype.addWithCarry = function () {
             var address = _memManager.getNextTwoBytes();
@@ -147,12 +164,15 @@ var TSOS;
             this.increasePC(1);
         };
         Cpu.prototype.breakProcess = function () {
-            this.PC = 0;
-            this.Acc = 0;
-            this.Xreg = 0;
-            this.Yreg = 0;
-            this.Zflag = 0;
-            this.increasePC(1);
+            //this.PC = 0;
+            //this.Acc = 0;
+            //this.Xreg = 0;
+            //this.Yreg = 0;
+            //this.Zflag = 0;
+            //this.increasePC(1);
+            this.updatePCB(_CPU);
+            this.isExecuting = false;
+            _Kernel.krnTrace("BREAK");
         };
         Cpu.prototype.compareToXReg = function () {
             var address = _memManager.getNextTwoBytes();
@@ -168,9 +188,18 @@ var TSOS;
         //Branch n bytes if Zflag=0
         Cpu.prototype.branchNotEqual = function () {
             var jump = _memManager.getNextByte();
-            this.increasePC(2);
+            this.increasePC(1);
             if (this.Zflag == 0) {
-                this.increasePC(jump);
+                var offset = this.PC + jump;
+                if (offset > _currentProcess.limit) {
+                    this.PC = offset - 255;
+                }
+                else {
+                    this.PC = offset + 1;
+                }
+            }
+            else {
+                this.increasePC(1);
             }
         };
         Cpu.prototype.incrByteVal = function () {
@@ -182,7 +211,20 @@ var TSOS;
             this.increasePC(3);
         };
         Cpu.prototype.sysCall = function () {
-            //TODO: Write code 
+            if (this.Xreg == 1) {
+                _Kernel.krnTrace("printing " + this.Yreg.toString());
+                _StdOut.putText(this.Yreg.toString());
+                this.increasePC(1);
+            }
+            if (this.Xreg == 2) {
+                var posit = this.Yreg + _currentProcess.base;
+                while (_memManager.memory[posit].byte != "00") {
+                    var ascii = String.fromCharCode(parseInt(_memManager.memory[posit].byte, 16));
+                    _StdOut.putText(ascii);
+                    posit++;
+                }
+                this.increasePC(1);
+            }
         };
         return Cpu;
     }());

@@ -20,11 +20,15 @@ module TSOS {
     
     export class Cpu {
 
+        
+        
+        
         constructor(public PC: number = 0,
                     public Acc: number = 0,
                     public Xreg: number = 0,
                     public Yreg: number = 0,
                     public Zflag: number = 0,
+                    public IR: string = "00",
                     public isExecuting: boolean = false) {
 
         }
@@ -45,6 +49,14 @@ module TSOS {
             this.Yreg = currentProcess.Yreg;
             this.Zflag = currentProcess.Zflag;
         }
+        
+        public updatePCB(CPU: Cpu):void{
+            _currentProcess.PC = this.PC;
+            _currentProcess.Acc = this.Acc;
+            _currentProcess.Xreg = this.Xreg;
+            _currentProcess.Yreg = this.Yreg;
+            _currentProcess.Zflag = this.Zflag;
+        }
 
         
         public cycle(): void {
@@ -53,11 +65,16 @@ module TSOS {
             // Do the real work here. Be sure to set this.isExecuting appropriately.
             if(this.isExecuting){
                 let opcode = _memManager.readByte(this.PC);
-                this.execute(opcode);
+                //_StdOut.putText("opcode = " + opcode);
+                this.execute(opcode.toString(16));
+                Control.updateCpuTable();
             }
         }
         
-        public execute(instr) : void {
+        public execute(instr : string) : void {
+            instr = instr.toLowerCase();
+            this.IR = instr;
+            //_StdOut.putText(instr);
             switch(instr) {
                 case "a9":
                 this.loadAccWithConst();
@@ -107,24 +124,27 @@ module TSOS {
             }
         }
         
-        public increasePC(bytes): void {
-            this.PC = (this.PC + bytes)
+        public increasePC(numBytes): void {
+            this.PC = (this.PC + numBytes)
         }
         
         public loadAccWithConst(): void {
            this.Acc = _memManager.getNextByte();
            this.increasePC(2);
+           _Kernel.krnTrace("Const ACC = " + this.Acc);
         }
         
         public loadAccFromMem(): void {
            this.Acc = _memManager.getNextTwoBytes();
            this.increasePC(3);
+           _Kernel.krnTrace("Mem ACC = " + this.Acc);
         }
         
         public storeAccInMem(): void {
            let address = _memManager.getNextTwoBytes();
            _memManager.writeByte(address, this.Acc.toString());
            this.increasePC(3);
+           _Kernel.krnTrace("ACC Stored");
         }
         
         public addWithCarry(): void {
@@ -162,12 +182,15 @@ module TSOS {
         }
         
         public breakProcess(): void {
-           this.PC = 0;
-           this.Acc = 0;
-           this.Xreg = 0;
-           this.Yreg = 0;
-           this.Zflag = 0;
-           this.increasePC(1);
+           //this.PC = 0;
+           //this.Acc = 0;
+           //this.Xreg = 0;
+           //this.Yreg = 0;
+           //this.Zflag = 0;
+           //this.increasePC(1);
+           this.updatePCB(_CPU);
+           this.isExecuting = false;
+           _Kernel.krnTrace("BREAK");
         }
         
         public compareToXReg(): void {
@@ -184,9 +207,16 @@ module TSOS {
         //Branch n bytes if Zflag=0
         public branchNotEqual(): void {
            let jump: number = _memManager.getNextByte();
-           this.increasePC(2);
+           this.increasePC(1);
            if(this.Zflag == 0){
-               this.increasePC(jump);
+               let offset = this.PC + jump
+               if(offset > _currentProcess.limit){
+                   this.PC = offset - 255;
+               }else{
+               this.PC = offset + 1
+                }
+           }else{
+               this.increasePC(1);
            }
         }
         
@@ -200,8 +230,24 @@ module TSOS {
         }
         
         public sysCall(): void {
-           //TODO: Write code 
+           if(this.Xreg == 1){
+               _Kernel.krnTrace("printing " + this.Yreg.toString());
+               _StdOut.putText(this.Yreg.toString());
+               this.increasePC(1);
+           }
+           
+           if(this.Xreg == 2) {
+               let posit = this.Yreg + _currentProcess.base;
+               while(_memManager.memory[posit].byte != "00"){
+                   let ascii = String.fromCharCode(parseInt(_memManager.memory[posit].byte,16));
+                   _StdOut.putText(ascii);
+                   posit++;
+               }
+               this.increasePC(1);
+           }
         }
+        
+         
         
         
     }

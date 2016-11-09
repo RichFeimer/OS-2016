@@ -20,6 +20,7 @@ var TSOS;
             this.commandList = [];
             this.curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
             this.apologies = "[sorry]";
+            _memManager = new TSOS.memoryManager();
         }
         Shell.prototype.init = function () {
             var sc;
@@ -68,7 +69,7 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellRun, "run", "<PID> - executes a program in memory");
             this.commandList[this.commandList.length] = sc;
             // clear memory
-            sc = new TSOS.ShellCommand(this.shellClearMem, "clearMem", "- clears the memory");
+            sc = new TSOS.ShellCommand(this.shellClearMem, "clearmem", "- clears the memory");
             this.commandList[this.commandList.length] = sc;
             // runall
             sc = new TSOS.ShellCommand(this.shellRunall, "runall", " - executes all programs in memory");
@@ -300,6 +301,7 @@ var TSOS;
             var inputString = userText.value.trim();
             var code = inputString.replace(/ /g, '');
             var inputCount = 0;
+            //var _memManager = new TSOS.memoryManager();
             //Check the code's validity
             if (userText.value.length == 0) {
                 _StdOut.putText("You have to give me something to work with...");
@@ -311,16 +313,8 @@ var TSOS;
                     }
                 }
                 if (inputCount == code.length && typeof code !== 'undefined') {
-                    try {
-                        //if (_mem instanceof TSOS.Memory){_StdOut.putText("true")}
-                        //_StdOut.putText(_CPU instanceof TSOS.Cpu);
-                        _memManager.test(code);
-                    }
-                    catch (e) {
-                        if (e) {
-                            _StdOut.putText("Input could not be loaded");
-                        }
-                    }
+                    //try{ 
+                    _memManager.loadToMemory(code);
                 }
                 else {
                     _StdOut.putText("Your input is invalid.");
@@ -328,8 +322,26 @@ var TSOS;
             }
         };
         Shell.prototype.shellRun = function (args) {
+            var run = false;
+            for (var i = 0; i < _residentList.length; i++) {
+                var resPid = _residentList[i].pid;
+                if (resPid == args) {
+                    _currentProcess = _residentList[i];
+                    _CPU.updateCPU(_currentProcess);
+                    _CPU.isExecuting = true;
+                    run = true;
+                }
+                if (run) {
+                    _StdOut.putText("Running PID " + args);
+                }
+                else {
+                    _StdOut.putText("Error: Cannot run PID " + args);
+                }
+            }
         };
         Shell.prototype.shellClearMem = function (args) {
+            _memManager.clearMemory();
+            _StdOut.putText("Memory cleared");
         };
         Shell.prototype.shellRunall = function (args) {
         };

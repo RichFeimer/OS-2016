@@ -33,6 +33,7 @@ module TSOS {
             // Get a global reference to the canvas.  TODO: Should we move this stuff into a Display Device Driver?
             _Canvas = <HTMLCanvasElement>document.getElementById('display');
             _memoryTable = <HTMLTableElement> document.getElementById('memoryTable');
+            _cpuTable = <HTMLTableElement> document.getElementById('cpuTable');
             
             // Get a global reference to the drawing context.
             _DrawingContext = _Canvas.getContext("2d");
@@ -149,8 +150,14 @@ module TSOS {
                         cell.innerHTML = "0x" + header;
                     }
                     else{
+                        try{
                         cell.innerHTML = _memManager.memory[counter].byte;
                         counter++;
+                        }catch(a){
+                            if(a){
+                                break;
+                            }
+                        }
                     }
                 }
             }
@@ -162,7 +169,7 @@ module TSOS {
             
             cells.innerHTML = _CPU.PC.toString();
             cells = <HTMLElement>rows.cells[1];
-            cells.innerHTML = _memManager.memory[_CPU.PC].byte;
+            cells.innerHTML = _CPU.IR;
             cells = <HTMLElement>rows.cells[2];
             cells.innerHTML = _CPU.Acc.toString();
             cells = <HTMLElement>rows.cells[3];
@@ -174,7 +181,9 @@ module TSOS {
         }
         
         
-        
+        public static updatePcbTable():void{
+            
+        }
         
         
         

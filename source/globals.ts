@@ -14,7 +14,7 @@
 const APP_NAME: string    = "OSwyn";   // 'cause Bob and I were at a loss for a better name.
 const APP_VERSION: string = "0.7";   // What did you expect?
 
-const CPU_CLOCK_INTERVAL: number = 100;   // This is in ms (milliseconds) so 1000 = 1 second.
+const CPU_CLOCK_INTERVAL: number = 200;   // This is in ms (milliseconds) so 1000 = 1 second.
 
 const TIMER_IRQ: number = 0;  // Pages 23 (timer), 9 (interrupts), and 561 (interrupt priority).
                               // NOTE: The timer is different from hardware/host clock pulses. Don't confuse these.
@@ -26,13 +26,14 @@ const KEYBOARD_IRQ: number = 1;
 // TODO: Make a global object and use that instead of the "_" naming convention in the global namespace.
 //
 var _CPU: TSOS.Cpu;  // Utilize TypeScript's type annotation system to ensure that _CPU is an instance of the Cpu class.
-var _memManager: TSOS.memoryManager;
 var _mem: TSOS.Memory;
+var _memManager: TSOS.memoryManager;
 var _memoryTable: HTMLTableElement;
 var _cpuTable: HTMLTableElement;
 var _process: TSOS.pcb;
 var _pid: number = 0;
 var _readyQueue;
+var _residentList = [];
 var _currentProcess;
 var _Control: TSOS.Control;
 var _OSclock: number = 0;  // Page 23.

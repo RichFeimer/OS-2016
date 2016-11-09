@@ -22,8 +22,10 @@ module TSOS {
         public commandList = [];
         public curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
         public apologies = "[sorry]";
-
+        public _memManager;
+        
         constructor() {
+            _memManager = new TSOS.memoryManager();
         }
         
         
@@ -118,7 +120,7 @@ module TSOS {
             
             // clear memory
             sc = new ShellCommand(this.shellClearMem,
-                                  "clearMem",
+                                  "clearmem",
             					  "- clears the memory")
             this.commandList[this.commandList.length] = sc;
             
@@ -372,6 +374,7 @@ module TSOS {
             var inputString = userText.value.trim();
             var code = inputString.replace(/ /g, '');
             var inputCount = 0;
+            //var _memManager = new TSOS.memoryManager();
             //Check the code's validity
             if (userText.value.length ==0){
                     _StdOut.putText("You have to give me something to work with...");
@@ -384,16 +387,17 @@ module TSOS {
                     }
                     if (inputCount == code.length && typeof code !== 'undefined'){
                         
-                       try{ 
-                       //if (_mem instanceof TSOS.Memory){_StdOut.putText("true")}
-                        //_StdOut.putText(_CPU instanceof TSOS.Cpu);
-                        _memManager.test(code);
+                       //try{ 
+                       
+                        _memManager.loadToMemory(code);
+                        //_CPU.loadToMemory(code);
+                        
                         //alert( _memManager.memory[1]);
-                       }catch(e){
-                           if(e){
-                               _StdOut.putText("Input could not be loaded");
-                           }
-                       }
+                       //}catch(e){
+                          // if(e){
+                            //   _StdOut.putText("Input could not be loaded");
+                           //}
+                      // }
                         
                     }
                     else{_StdOut.putText("Your input is invalid.");
@@ -410,11 +414,26 @@ module TSOS {
                 }
         }
         public shellRun(args) {
-            
+            let run = false;
+            for(var i = 0; i < _residentList.length; i++){
+                let resPid = _residentList[i].pid;
+                if(resPid == args){
+                    _currentProcess = _residentList[i];
+                    _CPU.updateCPU(_currentProcess);
+                    _CPU.isExecuting = true;
+                    run = true;
+                }
+                if(run){
+                    _StdOut.putText("Running PID " + args);
+                }else{
+                    _StdOut.putText("Error: Cannot run PID " + args);
+                }
+            }
         }
         
         public shellClearMem(args) {
-            
+            _memManager.clearMemory();
+            _StdOut.putText("Memory cleared");
         }
         
         public shellRunall(args) {
