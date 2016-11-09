@@ -7,7 +7,7 @@ module TSOS{
             
         }
         
-        public static beginExecution():void {
+         static beginExecution():void {
             _currentProcess = _readyQueue.dequeue();
             _CPU.updateCPU(_currentProcess);
             _currentProcess.state = 1;

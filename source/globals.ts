@@ -37,6 +37,7 @@ var _pid: number = 0;
 var _readyQueue;
 var _residentList = [];
 var _currentProcess;
+var _quantum: number = 6;
 var _Control: TSOS.Control;
 var _OSclock: number = 0;  // Page 23.
 

@@ -79,7 +79,14 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellPrompt, "prompt", "<string> - Sets the prompt.");
             this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
+            sc = new TSOS.ShellCommand(this.shellPs, "ps", " - displays the PIDs of all active processes.");
+            this.commandList[this.commandList.length] = sc;
+            //quantum
+            sc = new TSOS.ShellCommand(this.shellQuantum, "quantum", " <int> - sets the quantum for Round Robin");
+            this.commandList[this.commandList.length] = sc;
             // kill <id> - kills the specified process id.
+            sc = new TSOS.ShellCommand(this.shellKill, "kill", "<PID> - kills active process");
+            this.commandList[this.commandList.length] = sc;
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -354,6 +361,23 @@ var TSOS;
                 counter++;
             }
             //_cpuSched.beginExecution();
+        };
+        Shell.prototype.shellPs = function (args) {
+            _StdOut.putText("Executing pids are " + _currentProcess.pid);
+            for (var i = 0; i < _readyQueue.getSize(); i++) {
+                _StdOut.putText(" " + _readyQueue.index(i).pid);
+            }
+        };
+        Shell.prototype.shellQuantum = function (args) {
+            if (args < 0) {
+                _StdOut.putText("Error: Quantum must be positive");
+            }
+            else {
+                _quantum = args;
+                _StdOut.putText("Quantum is " + args);
+            }
+        };
+        Shell.prototype.shellKill = function (args) {
         };
         Shell.prototype.shellPrompt = function (args) {
             if (args.length > 0) {

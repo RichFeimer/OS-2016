@@ -139,8 +139,22 @@ module TSOS {
             this.commandList[this.commandList.length] = sc;
 
             // ps  - list the running processes and their IDs
-            // kill <id> - kills the specified process id.
-
+            sc = new ShellCommand(this.shellPs,
+                                  "ps",
+                                  " - displays the PIDs of all active processes.");
+            this.commandList[this.commandList.length] = sc;
+           
+           //quantum
+           sc = new ShellCommand(this.shellQuantum,
+                                  "quantum",
+                                  " <int> - sets the quantum for Round Robin");
+            this.commandList[this.commandList.length] = sc;
+           
+           // kill <id> - kills the specified process id.
+            sc = new ShellCommand(this.shellKill,
+                                  "kill",
+                                  "<PID> - kills active process");
+            this.commandList[this.commandList.length] = sc;
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -449,6 +463,26 @@ module TSOS {
                 counter++;
             }
             //_cpuSched.beginExecution();
+        }
+        
+        public shellPs(args) {
+            _StdOut.putText("Executing pids are " + _currentProcess.pid);
+            for(var i = 0; i < _readyQueue.getSize(); i++){
+                _StdOut.putText(" " + _readyQueue.index(i).pid);
+            }
+        }
+        
+        public shellQuantum(args){
+            if(args < 0){
+                _StdOut.putText("Error: Quantum must be positive");
+            }else{
+                _quantum = args;
+                _StdOut.putText("Quantum is " + args);
+            }
+        }
+        
+        public shellKill(args) {
+            
         }
         
         public shellPrompt(args) {
