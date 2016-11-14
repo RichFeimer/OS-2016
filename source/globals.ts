@@ -34,7 +34,7 @@ var _cpuTable: HTMLTableElement;
 var _pcbTable: HTMLTableElement;
 var _process: TSOS.pcb;
 var _pid: number = 0;
-var _readyQueue;
+var _readyQueue: TSOS.Queue;
 var _residentList = [];
 var _currentProcess;
 var _quantum: number = 6;

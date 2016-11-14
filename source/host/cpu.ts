@@ -143,14 +143,20 @@ module TSOS {
         
         public storeAccInMem(): void {
            let address = _memManager.getNextTwoBytes();
-           _memManager.writeByte(address, this.Acc.toString());
-           this.increasePC(3);
-           _Kernel.krnTrace("ACC Stored");
+           if(address + _currentProcess.base <= _currentProcess.limit){
+               _memManager.writeByte(address, this.Acc.toString(16));
+               this.increasePC(3);
+               _Kernel.krnTrace("ACC Stored");
+               Control.updateMemoryTable();
+           }else{
+               _StdOut.putText("Error: Memory breached.");
+               //TODO: Kill process
+           } 
         }
         
         public addWithCarry(): void {
             let address = _memManager.getNextTwoBytes();
-            let sum: number = parseInt((_memManager.memory[address].byte), 16) + parseInt(this.Acc.toString(), 16);
+            let sum: number = parseInt((_memManager.memory[address + _currentProcess.base].byte), 16) + this.Acc;
             this.Acc = sum;
             this.increasePC(3);
         }
@@ -162,7 +168,7 @@ module TSOS {
         
         public loadXRegFromMem(): void {
             let address = _memManager.getNextTwoBytes();
-            this.Xreg = parseInt((_memManager.memory[address].byte), 16);
+            this.Xreg = parseInt((_memManager.memory[address + _currentProcess.base].byte), 16);
             this.increasePC(3);
         }
         
@@ -173,7 +179,7 @@ module TSOS {
         
         public loadYRegFromMem(): void {
             let address = _memManager.getNextTwoBytes();
-            this.Yreg = parseInt((_memManager.memory[address].byte), 16);
+            this.Yreg = parseInt((_memManager.memory[address + _currentProcess.base].byte), 16);
             this.increasePC(3);
         }
         
@@ -196,7 +202,7 @@ module TSOS {
         
         public compareToXReg(): void {
            let address = _memManager.getNextTwoBytes();
-           let value = parseInt((_memManager.memory[address].byte), 16);
+           let value = parseInt((_memManager.memory[address + _currentProcess.base].byte), 16);
            if(value == this.Xreg){
                this.Zflag = 1;
            } else {
@@ -223,7 +229,7 @@ module TSOS {
         
         public incrByteVal(): void {
            let address = _memManager.getNextTwoBytes();
-           let data: string = _memManager.memory[address].byte
+           let data: string = _memManager.memory[address + _currentProcess.base].byte
            let value: number = parseInt(data, 16);
            value++;
            _memManager.writeByte(address, value.toString(16));

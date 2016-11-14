@@ -14,7 +14,7 @@
      in both the host and client environments.
 
      This (and other host/simulation scripts) is the only place that we should see "web" code, such as
-     DOM manipulation and event handling, and so on.  (Index.html is -- obviously -- the only place for markup.)
+     DOM manipulation and event handling, and so on.  (f.html is -- obviously -- the only place for markup.)
 
      This code references page numbers in the text book:
      Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 978-0-470-12872-5
@@ -207,53 +207,53 @@ module TSOS {
                 cells.innerHTML = _currentProcess.state.toString();
             }
 
-            if(_readyQueue.index(0) != null) {
+            if(_readyQueue.getProcess(0) != null) {
                 rows = <HTMLTableRowElement>_pcbTable.rows[2];
                 cells = <HTMLElement>rows.cells[0];
-                cells.innerHTML = _readyQueue.index(0).pid.toString();
+                cells.innerHTML = _readyQueue.getProcess(0).pid.toString();
                 cells = <HTMLElement>rows.cells[1];
-                cells.innerHTML = _readyQueue.index(0).PC.toString();
+                cells.innerHTML = _readyQueue.getProcess(0).PC.toString();
                 cells = <HTMLElement>rows.cells[2];
-                cells.innerHTML = _memManager.memory[_readyQueue.index(0).PC].byte;
+                cells.innerHTML = _memManager.memory[_readyQueue.getProcess(0).PC].byte;
                 cells = <HTMLElement>rows.cells[3];
-                cells.innerHTML = _readyQueue.index(0).Acc.toString();
+                cells.innerHTML = _readyQueue.getProcess(0).Acc.toString();
                 cells = <HTMLElement>rows.cells[4];
-                cells.innerHTML = _readyQueue.index(0).Xreg.toString();
+                cells.innerHTML = _readyQueue.getProcess(0).Xreg.toString();
                 cells = <HTMLElement>rows.cells[5];
-                cells.innerHTML = _readyQueue.index(0).Yreg.toString();
+                cells.innerHTML = _readyQueue.getProcess(0).Yreg.toString();
                 cells = <HTMLElement>rows.cells[6];
-                cells.innerHTML = _readyQueue.index(0).Zflag.toString();
+                cells.innerHTML = _readyQueue.getProcess(0).Zflag.toString();
                 cells = <HTMLElement>rows.cells[7];
-                cells.innerHTML = _readyQueue.index(0).base.toString();
+                cells.innerHTML = _readyQueue.getProcess(0).base.toString();
                 cells = <HTMLElement>rows.cells[8];
-                cells.innerHTML = _readyQueue.index(0).limit.toString();
+                cells.innerHTML = _readyQueue.getProcess(0).limit.toString();
                 cells = <HTMLElement>rows.cells[9];
-                cells.innerHTML = _readyQueue.index(0).state.toString();
+                cells.innerHTML = _readyQueue.getProcess(0).state.toString();
             }
 
 
-                if(_readyQueue.index(1) != null){
+                if(_readyQueue.getProcess(1) != null){
                 rows = <HTMLTableRowElement>_pcbTable.rows[3];
                 cells = <HTMLElement>rows.cells[0];
-                cells.innerHTML = _readyQueue.index(1).pid.toString();
+                cells.innerHTML = _readyQueue.getProcess(1).pid.toString();
                 cells = <HTMLElement>rows.cells[1];
-                cells.innerHTML = _readyQueue.index(1).PC.toString();
+                cells.innerHTML = _readyQueue.getProcess(1).PC.toString();
                 cells = <HTMLElement>rows.cells[2];
-                cells.innerHTML = _memManager.memory[_readyQueue.index(1).PC].byte;
+                cells.innerHTML = _memManager.memory[_readyQueue.getProcess(1).PC].byte;
                 cells = <HTMLElement>rows.cells[3];
-                cells.innerHTML = _readyQueue.index(1).Acc.toString();
+                cells.innerHTML = _readyQueue.getProcess(1).Acc.toString();
                 cells = <HTMLElement>rows.cells[4];
-                cells.innerHTML = _readyQueue.index(1).Xreg.toString();
+                cells.innerHTML = _readyQueue.getProcess(1).Xreg.toString();
                 cells = <HTMLElement>rows.cells[5];
-                cells.innerHTML = _readyQueue.index(1).Yreg.toString();
+                cells.innerHTML = _readyQueue.getProcess(1).Yreg.toString();
                 cells = <HTMLElement>rows.cells[6];
-                cells.innerHTML = _readyQueue.index(1).Zflag.toString();
+                cells.innerHTML = _readyQueue.getProcess(1).Zflag.toString();
                 cells = <HTMLElement>rows.cells[7];
-                cells.innerHTML = _readyQueue.index(1).base.toString();
+                cells.innerHTML = _readyQueue.getProcess(1).base.toString();
                 cells = <HTMLElement>rows.cells[8];
-                cells.innerHTML = _readyQueue.index(1).limit.toString();
+                cells.innerHTML = _readyQueue.getProcess(1).limit.toString();
                 cells = <HTMLElement>rows.cells[9];
-                cells.innerHTML = _readyQueue.index(1).state.toString();
+                cells.innerHTML = _readyQueue.getProcess(1).state.toString();
             }
 
 

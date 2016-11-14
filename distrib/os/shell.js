@@ -22,6 +22,7 @@ var TSOS;
             this.apologies = "[sorry]";
             _memManager = new TSOS.memoryManager();
             _cpuSched = new TSOS.cpuScheduler();
+            _readyQueue = new TSOS.Queue();
         }
         Shell.prototype.init = function () {
             var sc;
@@ -357,7 +358,7 @@ var TSOS;
                 _StdOut.putText("RLC " + _residentList[counter].pid);
                 _readyQueue.enqueue(_residentList[counter]);
                 _Kernel.krnTrace("SIZE OF QUEUE = " + _residentList.length);
-                _Kernel.krnTrace("FIRST PID =  " + _readyQueue.index(0).pid.toString());
+                _Kernel.krnTrace("FIRST PID =  " + _readyQueue.getProcess(0).pid.toString());
                 counter++;
             }
             //_cpuSched.beginExecution();
@@ -365,7 +366,7 @@ var TSOS;
         Shell.prototype.shellPs = function (args) {
             _StdOut.putText("Executing pids are " + _currentProcess.pid);
             for (var i = 0; i < _readyQueue.getSize(); i++) {
-                _StdOut.putText(" " + _readyQueue.index(i).pid);
+                _StdOut.putText(" " + _readyQueue.getProcess(i).pid);
             }
         };
         Shell.prototype.shellQuantum = function (args) {

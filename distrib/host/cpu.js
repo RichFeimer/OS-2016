@@ -132,13 +132,19 @@ var TSOS;
         };
         Cpu.prototype.storeAccInMem = function () {
             var address = _memManager.getNextTwoBytes();
-            _memManager.writeByte(address, this.Acc.toString());
-            this.increasePC(3);
-            _Kernel.krnTrace("ACC Stored");
+            if (address + _currentProcess.base <= _currentProcess.limit) {
+                _memManager.writeByte(address, this.Acc.toString(16));
+                this.increasePC(3);
+                _Kernel.krnTrace("ACC Stored");
+                TSOS.Control.updateMemoryTable();
+            }
+            else {
+                _StdOut.putText("Error: Memory breached.");
+            }
         };
         Cpu.prototype.addWithCarry = function () {
             var address = _memManager.getNextTwoBytes();
-            var sum = parseInt((_memManager.memory[address].byte), 16) + parseInt(this.Acc.toString(), 16);
+            var sum = parseInt((_memManager.memory[address + _currentProcess.base].byte), 16) + this.Acc;
             this.Acc = sum;
             this.increasePC(3);
         };
@@ -148,7 +154,7 @@ var TSOS;
         };
         Cpu.prototype.loadXRegFromMem = function () {
             var address = _memManager.getNextTwoBytes();
-            this.Xreg = parseInt((_memManager.memory[address].byte), 16);
+            this.Xreg = parseInt((_memManager.memory[address + _currentProcess.base].byte), 16);
             this.increasePC(3);
         };
         Cpu.prototype.loadYRegWithConst = function () {
@@ -157,7 +163,7 @@ var TSOS;
         };
         Cpu.prototype.loadYRegFromMem = function () {
             var address = _memManager.getNextTwoBytes();
-            this.Yreg = parseInt((_memManager.memory[address].byte), 16);
+            this.Yreg = parseInt((_memManager.memory[address + _currentProcess.base].byte), 16);
             this.increasePC(3);
         };
         Cpu.prototype.noOp = function () {
@@ -177,7 +183,7 @@ var TSOS;
         };
         Cpu.prototype.compareToXReg = function () {
             var address = _memManager.getNextTwoBytes();
-            var value = parseInt((_memManager.memory[address].byte), 16);
+            var value = parseInt((_memManager.memory[address + _currentProcess.base].byte), 16);
             if (value == this.Xreg) {
                 this.Zflag = 1;
             }
@@ -205,7 +211,7 @@ var TSOS;
         };
         Cpu.prototype.incrByteVal = function () {
             var address = _memManager.getNextTwoBytes();
-            var data = _memManager.memory[address].byte;
+            var data = _memManager.memory[address + _currentProcess.base].byte;
             var value = parseInt(data, 16);
             value++;
             _memManager.writeByte(address, value.toString(16));

@@ -16,7 +16,7 @@ module TSOS{
         
         
         public static swap():void{
-            let nextProcess = _readyQueue.index(0);
+            let nextProcess = _readyQueue.getProcess(0);
             _CPU.updatePCB(_CPU);
             
             nextProcess.base = _currentProcess.base;

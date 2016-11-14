@@ -37,6 +37,10 @@ var TSOS;
             }
             return retVal;
         };
+        Queue.prototype.getProcess = function (i) {
+            var retVal = this.q[i];
+            return retVal;
+        };
         return Queue;
     }());
     TSOS.Queue = Queue;

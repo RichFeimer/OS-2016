@@ -40,5 +40,10 @@ module TSOS {
             }
             return retVal;
         }
+        
+        public getProcess(i){
+            let retVal = this.q[i];
+            return retVal;
+        }
     }
 }

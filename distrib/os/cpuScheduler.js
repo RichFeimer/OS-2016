@@ -11,7 +11,7 @@ var TSOS;
             _CPU.isExecuting = true;
         };
         cpuScheduler.swap = function () {
-            var nextProcess = _readyQueue.index(0);
+            var nextProcess = _readyQueue.getProcess(0);
             _CPU.updatePCB(_CPU);
             nextProcess.base = _currentProcess.base;
             nextProcess.limit = _currentProcess.limit;
