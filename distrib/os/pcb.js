@@ -2,7 +2,8 @@
 var TSOS;
 (function (TSOS) {
     var pcb = (function () {
-        function pcb(state, pid, PC, Acc, Xreg, Yreg, Zflag, base, limit, isExecuting) {
+        function pcb(state, //1 means ready, 0 means waiting, 2 means done
+            pid, PC, Acc, Xreg, Yreg, Zflag, base, limit, isExecuting) {
             if (state === void 0) { state = 0; }
             if (pid === void 0) { pid = 0; }
             if (PC === void 0) { PC = 0; }

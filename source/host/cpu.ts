@@ -57,6 +57,20 @@ module TSOS {
             _currentProcess.Yreg = this.Yreg;
             _currentProcess.Zflag = this.Zflag;
         }
+        
+        public stop() {
+            this.init();
+        }
+        
+        public start(process: pcb){
+            _currentProcess = process;
+            this.PC = process.PC;
+            this.Acc = process.Acc;
+            this.Xreg = process.Xreg;
+            this.Yreg = process.Yreg;
+            this.Zflag = process.Zflag;
+            this.isExecuting = true;
+        }
 
         
         public cycle(): void {
@@ -128,23 +142,23 @@ module TSOS {
         public increasePC(numBytes): void {
             this.PC = (this.PC + numBytes)
         }
-        
+        //A9
         public loadAccWithConst(): void {
            this.Acc = _memManager.getNextByte();
            this.increasePC(2);
            _Kernel.krnTrace("Const ACC = " + this.Acc);
         }
-        
+        //AD
         public loadAccFromMem(): void {
            this.Acc = _memManager.getNextTwoBytes();
            this.increasePC(3);
            _Kernel.krnTrace("Mem ACC = " + this.Acc);
         }
-        
+        //8D
         public storeAccInMem(): void {
            let address = _memManager.getNextTwoBytes();
            if(address + _currentProcess.base <= _currentProcess.limit){
-               _memManager.writeByte(address, this.Acc.toString(16));
+               _memManager.writeByte(address + _currentProcess.base, this.Acc.toString(16));
                this.increasePC(3);
                _Kernel.krnTrace("ACC Stored");
                Control.updateMemoryTable();
@@ -153,14 +167,14 @@ module TSOS {
                //TODO: Kill process
            } 
         }
-        
+        //6D
         public addWithCarry(): void {
             let address = _memManager.getNextTwoBytes();
             let sum: number = parseInt((_memManager.memory[address + _currentProcess.base].byte), 16) + this.Acc;
             this.Acc = sum;
             this.increasePC(3);
         }
-        
+        //A2
         public loadXRegWithConst(): void {
            this.Xreg = _memManager.getNextByte();
            this.increasePC(2);
@@ -197,6 +211,7 @@ module TSOS {
            //this.increasePC(1);
            this.updatePCB(_CPU);
            this.isExecuting = false;
+           _cpuSched.contextSwitchBreak();
            _Kernel.krnTrace("BREAK");
         }
         
@@ -232,7 +247,7 @@ module TSOS {
            let data: string = _memManager.memory[address + _currentProcess.base].byte
            let value: number = parseInt(data, 16);
            value++;
-           _memManager.writeByte(address, value.toString(16));
+           _memManager.writeByte(address + _currentProcess.base, value.toString(16));
            this.increasePC(3);
         }
         

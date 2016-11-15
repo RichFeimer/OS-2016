@@ -3,7 +3,7 @@
 
 module TSOS {
     export class pcb {
-        constructor(public state = 0,
+        constructor(public state = 0, //1 means ready, 0 means waiting, 2 means done
                 public pid: number = 0,
                 public PC: number = 0,
                 public Acc: number = 0,

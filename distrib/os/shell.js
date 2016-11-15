@@ -355,13 +355,13 @@ var TSOS;
         Shell.prototype.shellRunall = function (args) {
             var counter = 0;
             for (var i = 0; i < _residentList.length; i++) {
-                _StdOut.putText("RLC " + _residentList[counter].pid);
+                _StdOut.putText(" Running " + _residentList[counter].pid);
                 _readyQueue.enqueue(_residentList[counter]);
                 _Kernel.krnTrace("SIZE OF QUEUE = " + _residentList.length);
                 _Kernel.krnTrace("FIRST PID =  " + _readyQueue.getProcess(0).pid.toString());
                 counter++;
             }
-            //_cpuSched.beginExecution();
+            (_cpuSched).beginExecution();
         };
         Shell.prototype.shellPs = function (args) {
             _StdOut.putText("Executing pids are " + _currentProcess.pid);

@@ -24,7 +24,7 @@ export class memoryManager {
         }
         
         public loadToMemory(code: string):void {
-          if((code.length/2) < 256){
+          if((code.length/2) <= 256){
             for (var i = 0; i < code.length; i += 2) {
                 var toByte = code.charAt(i) + code.charAt(i+1);
                 
@@ -63,11 +63,11 @@ export class memoryManager {
         
         
         public getNextByte(): number{
-            return parseInt(((this.memory[_CPU.PC + 1].byte).toString()),16);
+            return parseInt((this.memory[_CPU.PC + 1].byte),16);
         }
         
         public getNextTwoBytes(): number{
-            return parseInt(((this.memory[_CPU.PC + 2].byte).toString()) + ((this.memory[_CPU.PC + 1].byte).toString()),16);
+            return parseInt(((this.memory[_CPU.PC + 2].byte) + (this.memory[_CPU.PC + 1].byte)),16);
         }
         
         public writeByte (loc: number, byte: string) {

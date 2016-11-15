@@ -54,6 +54,18 @@ var TSOS;
             _currentProcess.Yreg = this.Yreg;
             _currentProcess.Zflag = this.Zflag;
         };
+        Cpu.prototype.stop = function () {
+            this.init();
+        };
+        Cpu.prototype.start = function (process) {
+            _currentProcess = process;
+            this.PC = process.PC;
+            this.Acc = process.Acc;
+            this.Xreg = process.Xreg;
+            this.Yreg = process.Yreg;
+            this.Zflag = process.Zflag;
+            this.isExecuting = true;
+        };
         Cpu.prototype.cycle = function () {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
@@ -120,20 +132,23 @@ var TSOS;
         Cpu.prototype.increasePC = function (numBytes) {
             this.PC = (this.PC + numBytes);
         };
+        //A9
         Cpu.prototype.loadAccWithConst = function () {
             this.Acc = _memManager.getNextByte();
             this.increasePC(2);
             _Kernel.krnTrace("Const ACC = " + this.Acc);
         };
+        //AD
         Cpu.prototype.loadAccFromMem = function () {
             this.Acc = _memManager.getNextTwoBytes();
             this.increasePC(3);
             _Kernel.krnTrace("Mem ACC = " + this.Acc);
         };
+        //8D
         Cpu.prototype.storeAccInMem = function () {
             var address = _memManager.getNextTwoBytes();
             if (address + _currentProcess.base <= _currentProcess.limit) {
-                _memManager.writeByte(address, this.Acc.toString(16));
+                _memManager.writeByte(address + _currentProcess.base, this.Acc.toString(16));
                 this.increasePC(3);
                 _Kernel.krnTrace("ACC Stored");
                 TSOS.Control.updateMemoryTable();
@@ -142,12 +157,14 @@ var TSOS;
                 _StdOut.putText("Error: Memory breached.");
             }
         };
+        //6D
         Cpu.prototype.addWithCarry = function () {
             var address = _memManager.getNextTwoBytes();
             var sum = parseInt((_memManager.memory[address + _currentProcess.base].byte), 16) + this.Acc;
             this.Acc = sum;
             this.increasePC(3);
         };
+        //A2
         Cpu.prototype.loadXRegWithConst = function () {
             this.Xreg = _memManager.getNextByte();
             this.increasePC(2);
@@ -179,6 +196,7 @@ var TSOS;
             //this.increasePC(1);
             this.updatePCB(_CPU);
             this.isExecuting = false;
+            _cpuSched.contextSwitchBreak();
             _Kernel.krnTrace("BREAK");
         };
         Cpu.prototype.compareToXReg = function () {
@@ -214,7 +232,7 @@ var TSOS;
             var data = _memManager.memory[address + _currentProcess.base].byte;
             var value = parseInt(data, 16);
             value++;
-            _memManager.writeByte(address, value.toString(16));
+            _memManager.writeByte(address + _currentProcess.base, value.toString(16));
             this.increasePC(3);
         };
         Cpu.prototype.sysCall = function () {

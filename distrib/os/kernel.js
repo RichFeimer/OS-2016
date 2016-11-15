@@ -77,6 +77,10 @@ var TSOS;
             }
             else if (_CPU.isExecuting) {
                 _CPU.cycle();
+                _qCount += 1;
+                if (_qCount == _quantum) {
+                    _cpuSched.contextSwitch();
+                }
             }
             else {
                 this.krnTrace("Idle");

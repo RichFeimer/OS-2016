@@ -38,6 +38,7 @@ var _readyQueue: TSOS.Queue;
 var _residentList = [];
 var _currentProcess;
 var _quantum: number = 6;
+var _qCount: number = 0;
 var _Control: TSOS.Control;
 var _OSclock: number = 0;  // Page 23.
 

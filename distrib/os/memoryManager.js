@@ -17,7 +17,7 @@ var TSOS;
             _StdOut.putText(code);
         };
         memoryManager.prototype.loadToMemory = function (code) {
-            if ((code.length / 2) < 256) {
+            if ((code.length / 2) <= 256) {
                 for (var i = 0; i < code.length; i += 2) {
                     var toByte = code.charAt(i) + code.charAt(i + 1);
                     this.memory[this.memCursor] = new TSOS.Byte(toByte);
@@ -45,10 +45,10 @@ var TSOS;
             TSOS.Control.updateMemoryTable();
         };
         memoryManager.prototype.getNextByte = function () {
-            return parseInt(((this.memory[_CPU.PC + 1].byte).toString()), 16);
+            return parseInt((this.memory[_CPU.PC + 1].byte), 16);
         };
         memoryManager.prototype.getNextTwoBytes = function () {
-            return parseInt(((this.memory[_CPU.PC + 2].byte).toString()) + ((this.memory[_CPU.PC + 1].byte).toString()), 16);
+            return parseInt(((this.memory[_CPU.PC + 2].byte) + (this.memory[_CPU.PC + 1].byte)), 16);
         };
         memoryManager.prototype.writeByte = function (loc, byte) {
             if (byte.length < 2) {

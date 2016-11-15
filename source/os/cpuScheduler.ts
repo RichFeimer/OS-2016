@@ -3,36 +3,46 @@ module TSOS{
 
     export class cpuScheduler{
         
-        constructor(){
-            
-        }
+        constructor()
+        {}
         
-         static beginExecution():void {
+        public beginExecution():void{
             _currentProcess = _readyQueue.dequeue();
             _CPU.updateCPU(_currentProcess);
             _currentProcess.state = 1;
             _CPU.isExecuting = true;
+            
         }
         
+        public contextSwitch():void {
+            if (_qCount == _quantum){
+                _qCount = 0;
+                
+                if(_readyQueue.getSize() > 0) {
+                    _currentProcess.state = 0;
+                    _CPU.updatePCB(_CPU);
+                    _readyQueue.enqueue(_currentProcess);
+                    _currentProcess = _readyQueue.dequeue();
+                    _currentProcess.state = 1;
+                    _CPU.updateCPU(_currentProcess);
+                }
+            }
+        }
         
-        public static swap():void{
-            let nextProcess = _readyQueue.getProcess(0);
-            _CPU.updatePCB(_CPU);
-            
-            nextProcess.base = _currentProcess.base;
-            nextProcess.limit = _currentProcess.limit;
-            if(nextProcess.PC > 0 && nextProcess.PC < 256){
-                nextProcess.PC = nextProcess.PC + _currentProcess.base;
+        public contextSwitchBreak():void {
+            _qCount = 0;
+            if (_readyQueue.getSize() > 0) {
+                _CPU.isExecuting = true;
+                _CPU.updatePCB(_CPU);
+                _currentProcess.state = 2;
+                _currentProcess = _readyQueue.dequeue();
+                _CPU.updateCPU(_currentProcess);
+            }else{
+                _CPU.isExecuting = false;
+                _StdOut.advanceLine();
+                _StdOut.putText("Finished Execution");
+                
             }
-            if(nextProcess.PC >= 256 && nextProcess.PC < 511){
-                nextProcess.PC = nextProcess.PC - 256;
-            }
-            if(nextProcess.PC >= 511 && nextProcess.PC < 768){
-                nextProcess.PC = nextProcess.PC - 256;
-            }
-            
-            _Kernel.krnTrace("BASE = " + nextProcess.base + " LIMIT = " + nextProcess.limit + " PC =" + nextProcess.PC);
-            
         }
     }
 }
