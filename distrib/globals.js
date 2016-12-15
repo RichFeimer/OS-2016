@@ -28,6 +28,7 @@ var _memoryTable;
 var _cpuTable;
 var _pcbTable;
 var _process;
+var _fsdd;
 var _pid = 0;
 var _readyQueue;
 var _residentList = [];

@@ -23,6 +23,7 @@ var TSOS;
             _memManager = new TSOS.memoryManager();
             _cpuSched = new TSOS.cpuScheduler();
             _readyQueue = new TSOS.Queue();
+            _fsdd = new TSOS.fileSystemDeviceDriver();
         }
         Shell.prototype.init = function () {
             var sc;
@@ -93,6 +94,15 @@ var TSOS;
             this.commandList[this.commandList.length] = sc;
             //read <filename>
             sc = new TSOS.ShellCommand(this.shellRead, "read", " <filename> - displays the contents of a file");
+            this.commandList[this.commandList.length] = sc;
+            //write <filename>
+            sc = new TSOS.ShellCommand(this.shellWrite, "write", " <filename> \"data\" - writes the text in quotes to the file");
+            this.commandList[this.commandList.length] = sc;
+            //delete <filename>
+            sc = new TSOS.ShellCommand(this.shellDelete, "delete", " <filename> - deletes a file");
+            this.commandList[this.commandList.length] = sc;
+            //format
+            sc = new TSOS.ShellCommand(this.shellFormat, "format", " - initializes entire disk");
             this.commandList[this.commandList.length] = sc;
             //
             // Display the initial prompt.
@@ -434,9 +444,50 @@ var TSOS;
                 _StdOut.putText("Process " + args + " terminated");
             }
         };
+        //Create new file 
         Shell.prototype.shellCreate = function (args) {
+            if (args.length > 0 && args.length <= 60) {
+                TSOS.fileSystemDeviceDriver.createFile(args.join());
+                _StdOut.putText("File " + args.join() + " was created successfully");
+            }
+            else {
+                _StdOut.putText("File could not be created. Make sure it is between 1 and 60 characters");
+            }
         };
+        //Read existing file
         Shell.prototype.shellRead = function (args) {
+            if (args.length > 0) {
+                TSOS.fileSystemDeviceDriver.readFile(args.join());
+            }
+        };
+        //Write to existing file
+        Shell.prototype.shellWrite = function (args) {
+            if (args.length >= 2) {
+                var fileData = "";
+                for (var i = 1; i < args.length; i++) {
+                    fileData += args[i] + " ";
+                }
+                if (fileData.charAt(0) == "\"" && fileData.charAt(fileData.length - 2) == "\"") {
+                    TSOS.fileSystemDeviceDriver.writeFile(args[0], fileData.slice(1, fileData.length - 2));
+                    _StdOut.putText("File " + args[0] + " was successfully wriiten to");
+                }
+                else {
+                    _StdOut.putText("ERROR: Please put data in quotes");
+                }
+            }
+        };
+        //Delete file from disk
+        Shell.prototype.shellDelete = function (args) {
+            if (args.length > 0) {
+                _Kernel.krnTrace("DELETING FILE");
+                TSOS.fileSystemDeviceDriver.deleteFile(args.join());
+                _StdOut.putText("File " + args.join() + " was successfully deleted");
+            }
+        };
+        //Nuke the whole disk
+        Shell.prototype.shellFormat = function (args) {
+            TSOS.fileSystemDeviceDriver.format();
+            _StdOut.putText("Hard Drive Formatted Sucessfully.");
         };
         Shell.prototype.shellPrompt = function (args) {
             if (args.length > 0) {

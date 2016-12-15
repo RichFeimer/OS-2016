@@ -33,6 +33,7 @@ var _memoryTable: HTMLTableElement;
 var _cpuTable: HTMLTableElement;
 var _pcbTable: HTMLTableElement;
 var _process: TSOS.pcb;
+var _fsdd: TSOS.fileSystemDeviceDriver;
 var _pid: number = 0;
 var _readyQueue: TSOS.Queue;
 var _residentList = [];
