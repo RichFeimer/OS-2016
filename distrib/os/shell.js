@@ -88,6 +88,12 @@ var TSOS;
             // kill <id> - kills the specified process id.
             sc = new TSOS.ShellCommand(this.shellKill, "kill", "<PID> - kills active process");
             this.commandList[this.commandList.length] = sc;
+            // create <filename>
+            sc = new TSOS.ShellCommand(this.shellCreate, "create", "<filename> - creates a new file");
+            this.commandList[this.commandList.length] = sc;
+            //read <filename>
+            sc = new TSOS.ShellCommand(this.shellRead, "read", " <filename> - displays the contents of a file");
+            this.commandList[this.commandList.length] = sc;
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -322,8 +328,12 @@ var TSOS;
                     }
                 }
                 if (inputCount == code.length && typeof code !== 'undefined') {
-                    //try{ 
-                    _memManager.loadToMemory(code);
+                    if (args[0] != undefined) {
+                        _memManager.loadToMemory(code, args[0]);
+                    }
+                    else {
+                        _memManager.loadToMemory(code, 10);
+                    }
                 }
                 else {
                     _StdOut.putText("Your input is invalid.");
@@ -379,6 +389,54 @@ var TSOS;
             }
         };
         Shell.prototype.shellKill = function (args) {
+            var foundPID = false;
+            //check if process we want to end is executing
+            if (_currentProcess.pid == args) {
+                if (_readyQueue.getSize() == 0) {
+                    //If it's the only process executing...
+                    _CPU.isExecuting = false;
+                    _memManager.clearMemSeg(_currentProcess.base, _currentProcess.limit);
+                    _StdOut.putText("Process " + args + " terminated");
+                }
+                else {
+                    //Otherwise....
+                    _memManager.clearMemSeg(_currentProcess.base, _currentProcess.limit);
+                    _currentProcess = _readyQueue.dequeue();
+                    _CPU.updateCPU(_currentProcess);
+                    _StdOut.putText("Process " + args + " terminated");
+                }
+            }
+            else {
+                //If it's not executing, it should be in the ready queue. Let us find it
+                for (var i = 0; i < _readyQueue.getSize(); i++) {
+                    if (_readyQueue.getProcess(i).pid == args) {
+                        if (_readyQueue.getSize() == 1) {
+                            var terminate = _readyQueue.dequeue();
+                        }
+                        else {
+                            var terminate = _readyQueue.dequeue();
+                            var keep = _readyQueue.dequeue();
+                            if (terminate.pid == args) {
+                                _memManager.clearMemSeg(terminate.base, keep.limit);
+                                _readyQueue.enqueue(keep);
+                                var foundPID_1 = true;
+                            }
+                            else {
+                                _memManager.clearMemSeg(keep.base, keep.limit);
+                                _readyQueue.enqueue(terminate);
+                                var foundPID_2 = true;
+                            }
+                        }
+                    }
+                }
+            }
+            if (foundPID) {
+                _StdOut.putText("Process " + args + " terminated");
+            }
+        };
+        Shell.prototype.shellCreate = function (args) {
+        };
+        Shell.prototype.shellRead = function (args) {
         };
         Shell.prototype.shellPrompt = function (args) {
             if (args.length > 0) {

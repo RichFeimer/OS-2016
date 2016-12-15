@@ -12,11 +12,13 @@ module TSOS {
                 public Zflag: number = 0,
                 public base: number = 0,
                 public limit: number = 0,
+                public priority: number = 0,
+                public loc: string = "",
                 public isExecuting: boolean = false) {
         }
     
     
-        public init(pid, base, limit, PC): void {
+        public init(pid, base, limit, PC, priority, loc): void {
             this.state = 0;
             this.pid = pid;
             this.PC = PC;
@@ -26,6 +28,8 @@ module TSOS {
             this.Zflag = 0;
             this.base = base;
             this.limit = limit;
+            this.priority = priority;
+            this.loc = loc;
             this.isExecuting = false;
         }
     }

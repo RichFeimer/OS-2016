@@ -23,7 +23,7 @@ export class memoryManager {
             _StdOut.putText(code);
         }
         
-        public loadToMemory(code: string):void {
+        public loadToMemory(code: string, priority: number):void {
           if((code.length/2) <= 256){
             for (var i = 0; i < code.length; i += 2) {
                 var toByte = code.charAt(i) + code.charAt(i+1);
@@ -35,7 +35,7 @@ export class memoryManager {
            
             
             var _process = new TSOS.pcb();
-            _process.init(_pid, this.base, this.limit, this.counter);
+            _process.init(_pid, this.base, this.limit, this.counter, priority, "memory");
             _StdOut.putText("Load sucessful. PID = " + _process.pid);
             _residentList.push(_process);
             _pid++;
@@ -52,6 +52,15 @@ export class memoryManager {
           }
         }
         
+        //Tactically nuke a single segment of the memory
+        public clearMemSeg(base: number, limit: number):void{
+            for(var i = base; i < limit; i++){
+                this.memory[i] = new Byte("00");
+            }
+            Control.updateMemoryTable();
+        }
+        
+        //Just nuke the whole damn thing
         public clearMemory():void{
             for (var i = 0; i < this.memory.length; i++) {
                this.memory[i] = new Byte("00");

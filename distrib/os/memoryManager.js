@@ -16,7 +16,7 @@ var TSOS;
         memoryManager.prototype.test = function (code) {
             _StdOut.putText(code);
         };
-        memoryManager.prototype.loadToMemory = function (code) {
+        memoryManager.prototype.loadToMemory = function (code, priority) {
             if ((code.length / 2) <= 256) {
                 for (var i = 0; i < code.length; i += 2) {
                     var toByte = code.charAt(i) + code.charAt(i + 1);
@@ -24,7 +24,7 @@ var TSOS;
                     this.memCursor++;
                 }
                 var _process = new TSOS.pcb();
-                _process.init(_pid, this.base, this.limit, this.counter);
+                _process.init(_pid, this.base, this.limit, this.counter, priority, "memory");
                 _StdOut.putText("Load sucessful. PID = " + _process.pid);
                 _residentList.push(_process);
                 _pid++;
@@ -38,6 +38,14 @@ var TSOS;
                 _StdOut.putText("Error: Memory out of bounds. Program is tooo long");
             }
         };
+        //Tactically nuke a single segment of the memory
+        memoryManager.prototype.clearMemSeg = function (base, limit) {
+            for (var i = base; i < limit; i++) {
+                this.memory[i] = new TSOS.Byte("00");
+            }
+            TSOS.Control.updateMemoryTable();
+        };
+        //Just nuke the whole damn thing
         memoryManager.prototype.clearMemory = function () {
             for (var i = 0; i < this.memory.length; i++) {
                 this.memory[i] = new TSOS.Byte("00");

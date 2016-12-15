@@ -156,6 +156,18 @@ module TSOS {
                                   "kill",
                                   "<PID> - kills active process");
             this.commandList[this.commandList.length] = sc;
+            
+           // create <filename>
+            sc = new ShellCommand(this.shellCreate,
+                                  "create",
+                                  "<filename> - creates a new file");
+            this.commandList[this.commandList.length] = sc;
+            
+            //read <filename>
+           sc = new ShellCommand(this.shellRead,
+                                  "read",
+                                  " <filename> - displays the contents of a file");
+            this.commandList[this.commandList.length] = sc;
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -404,18 +416,12 @@ module TSOS {
                     }
                     if (inputCount == code.length && typeof code !== 'undefined'){
                         
-                       //try{ 
-                       
-                        _memManager.loadToMemory(code);
-                        //_CPU.loadToMemory(code);
-                        
-                        //alert( _memManager.memory[1]);
-                       //}catch(e){
-                          // if(e){
-                            //   _StdOut.putText("Input could not be loaded");
-                           //}
-                      // }
-                        
+                       if(args[0] != undefined){
+                           _memManager.loadToMemory(code, args[0]);
+                       }else{
+                           _memManager.loadToMemory(code, 10);
+                       }
+                
                     }
                     else{_StdOut.putText("Your input is invalid.");
                     }
@@ -483,6 +489,57 @@ module TSOS {
         }
         
         public shellKill(args) {
+            let foundPID = false;
+            
+            //check if process we want to end is executing
+            if(_currentProcess.pid == args){
+                if(_readyQueue.getSize() == 0){
+                    //If it's the only process executing...
+                    _CPU.isExecuting = false;
+                    _memManager.clearMemSeg(_currentProcess.base, _currentProcess.limit);
+                    _StdOut.putText("Process " + args + " terminated");
+                }else{
+                    //Otherwise....
+                    _memManager.clearMemSeg(_currentProcess.base, _currentProcess.limit);
+                    _currentProcess = _readyQueue.dequeue();
+                    _CPU.updateCPU(_currentProcess);
+                    _StdOut.putText("Process " + args + " terminated");
+                }
+            }else{
+                //If it's not executing, it should be in the ready queue. Let us find it
+                for(let i = 0; i< _readyQueue.getSize(); i++){
+                    if(_readyQueue.getProcess(i).pid == args){
+                        if(_readyQueue.getSize() == 1){
+                            let terminate = _readyQueue.dequeue();
+                        }else{
+                            let terminate = _readyQueue.dequeue();
+                            let keep = _readyQueue.dequeue();
+                            
+                            if(terminate.pid == args){
+                                _memManager.clearMemSeg(terminate.base, keep.limit);
+                                _readyQueue.enqueue(keep);
+                                let foundPID = true;
+                            }else{
+                                _memManager.clearMemSeg(keep.base, keep.limit);
+                                _readyQueue.enqueue(terminate);
+                                let foundPID = true;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if(foundPID){
+                _StdOut.putText("Process " + args + " terminated");
+            }
+            
+        }
+        
+        public shellCreate(args){
+            
+        }
+        
+        public shellRead(args){
             
         }
         
