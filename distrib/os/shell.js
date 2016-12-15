@@ -469,7 +469,7 @@ var TSOS;
                 }
                 if (fileData.charAt(0) == "\"" && fileData.charAt(fileData.length - 2) == "\"") {
                     TSOS.fileSystemDeviceDriver.writeFile(args[0], fileData.slice(1, fileData.length - 2));
-                    _StdOut.putText("File " + args[0] + " was successfully wriiten to");
+                    _StdOut.putText("File " + args[0] + " was successfully written to");
                 }
                 else {
                     _StdOut.putText("ERROR: Please put data in quotes");

@@ -52,8 +52,19 @@ module TSOS {
             } else if (((keyCode >= 48) && (keyCode <= 57)) ||   // digits
                         (keyCode == 32)                     ||   // space
                         (keyCode == 13)                     ||    // enter
+                        (keyCode == 8)                      ||    // backspace
                         (keyCode == 191)) {                       // forward slash
                 chr = String.fromCharCode(keyCode);
+                _KernelInputQueue.enqueue(chr);
+            
+            }else if(keyCode == 222){
+                if(isShifted){
+                    chr = String.fromCharCode(keyCode - 188);
+                }
+                else{
+                    chr = String.fromCharCode(keyCode - 183);
+                }
+
                 _KernelInputQueue.enqueue(chr);
             }
         }

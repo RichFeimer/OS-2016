@@ -98,7 +98,9 @@ module TSOS{
                 for (let s = 0; s < 8; s++){
                     for (let b = 0; b < 8; b++){
                         let trackKey = t.toString() + s.toString() + b.toString();
-                        if(sessionStorage.getItem(trackKey).charAt(0) == "0"){
+                        if (sessionStorage.getItem(trackKey) == null){
+                            return trackKey;
+                        }else if(sessionStorage.getItem(trackKey).charAt(0) == "0"){
                             return trackKey;
                         }
                     }
@@ -255,7 +257,7 @@ module TSOS{
             }
         }
         //write to an existing file on the disk
-        public static writeFile(fileData:string, fileName:string):void{
+        public static writeFile(fileName:string, fileData:string):void{
             if (this.checkDirTrackForFileName(fileName) == false){
                 _StdOut.putText("ERROR: File " + fileName + " does not exist on disk.");
                 

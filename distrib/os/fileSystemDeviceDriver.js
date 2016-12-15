@@ -87,7 +87,10 @@ var TSOS;
                 for (var s = 0; s < 8; s++) {
                     for (var b = 0; b < 8; b++) {
                         var trackKey = t.toString() + s.toString() + b.toString();
-                        if (sessionStorage.getItem(trackKey).charAt(0) == "0") {
+                        if (sessionStorage.getItem(trackKey) == null) {
+                            return trackKey;
+                        }
+                        else if (sessionStorage.getItem(trackKey).charAt(0) == "0") {
                             return trackKey;
                         }
                     }
@@ -231,7 +234,7 @@ var TSOS;
             }
         };
         //write to an existing file on the disk
-        fileSystemDeviceDriver.writeFile = function (fileData, fileName) {
+        fileSystemDeviceDriver.writeFile = function (fileName, fileData) {
             if (this.checkDirTrackForFileName(fileName) == false) {
                 _StdOut.putText("ERROR: File " + fileName + " does not exist on disk.");
             }
