@@ -164,8 +164,10 @@ module TSOS {
                Control.updateMemoryTable();
            }else{
                _StdOut.putText("Error: Memory breached.");
+               _StdOut.advanceLine();
                //TODO: Kill process
            } 
+            _Kernel.krnTrace("STORED ACC VAL IS " + this.Acc);
         }
         //6D
         public addWithCarry(): void {
@@ -173,28 +175,32 @@ module TSOS {
             let sum: number = parseInt((_memManager.memory[address + _currentProcess.base].byte), 16) + this.Acc;
             this.Acc = sum;
             this.increasePC(3);
+            _Kernel.krnTrace("ADDED CARRY ACC VAL IS " + this.Acc);
         }
         //A2
         public loadXRegWithConst(): void {
            this.Xreg = _memManager.getNextByte();
            this.increasePC(2);
+           _Kernel.krnTrace("X REG FROM CONST IS " + this.Xreg);
         }
         //AE
         public loadXRegFromMem(): void {
             let address = _memManager.getNextTwoBytes();
             this.Xreg = parseInt((_memManager.memory[address + _currentProcess.base].byte), 16);
             this.increasePC(3);
+            _Kernel.krnTrace("X REG FROM MEM IS " + this.Xreg);
         }
         //A0
         public loadYRegWithConst(): void {
            this.Yreg = _memManager.getNextByte();
            this.increasePC(2);
         }
-        
+        //AC
         public loadYRegFromMem(): void {
             let address = _memManager.getNextTwoBytes();
             this.Yreg = parseInt((_memManager.memory[address + _currentProcess.base].byte), 16);
             this.increasePC(3);
+            _Kernel.krnTrace("YREG FROM MEM IS " + this.Yreg);
         }
         
         public noOp(): void {
@@ -225,7 +231,7 @@ module TSOS {
            }
            this.increasePC(3);
         }
-        
+        //D0
         //Branch n bytes if Zflag=0
         public branchNotEqual(): void {
            let jump: number = _memManager.getNextByte();
@@ -241,7 +247,7 @@ module TSOS {
                this.increasePC(1);
            }
         }
-        
+        //EE
         public incrByteVal(): void {
            let address = _memManager.getNextTwoBytes();
            let data: string = _memManager.memory[address + _currentProcess.base].byte
@@ -250,7 +256,7 @@ module TSOS {
            _memManager.writeByte(address + _currentProcess.base, value.toString(16));
            this.increasePC(3);
         }
-        
+        //FF
         public sysCall(): void {
            if(this.Xreg == 1){
                _Kernel.krnTrace("printing " + this.Yreg.toString());

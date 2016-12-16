@@ -25,6 +25,7 @@ var TSOS;
                     TSOS.Control.updateDiskTable();
                     _pid++;
                     _StdOut.putText("Program successfully loaded to disk");
+                    _StdOut.advanceLine();
                 }
                 else {
                     //If room in memory exists, use it

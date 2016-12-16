@@ -191,7 +191,7 @@ var TSOS;
                 cells = rows.cells[1];
                 cells.innerHTML = _readyQueue.getProcess(0).PC.toString();
                 cells = rows.cells[2];
-                cells.innerHTML = _memManager.memory[_readyQueue.getProcess(0).PC].byte;
+                //cells.innerHTML = _memManager.memory[_readyQueue.getProcess(0).PC].byte;
                 cells = rows.cells[3];
                 cells.innerHTML = _readyQueue.getProcess(0).Acc.toString();
                 cells = rows.cells[4];

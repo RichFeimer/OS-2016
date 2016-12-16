@@ -31,6 +31,7 @@ export class memoryManager {
                 Control.updateDiskTable();
                 _pid++;
                 _StdOut.putText("Program successfully loaded to disk");
+                _StdOut.advanceLine();
             }else{
                 //If room in memory exists, use it
                 for (var i = 0; i < code.length; i += 2) {

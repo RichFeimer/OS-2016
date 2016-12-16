@@ -155,7 +155,9 @@ var TSOS;
             }
             else {
                 _StdOut.putText("Error: Memory breached.");
+                _StdOut.advanceLine();
             }
+            _Kernel.krnTrace("STORED ACC VAL IS " + this.Acc);
         };
         //6D
         Cpu.prototype.addWithCarry = function () {
@@ -163,27 +165,32 @@ var TSOS;
             var sum = parseInt((_memManager.memory[address + _currentProcess.base].byte), 16) + this.Acc;
             this.Acc = sum;
             this.increasePC(3);
+            _Kernel.krnTrace("ADDED CARRY ACC VAL IS " + this.Acc);
         };
         //A2
         Cpu.prototype.loadXRegWithConst = function () {
             this.Xreg = _memManager.getNextByte();
             this.increasePC(2);
+            _Kernel.krnTrace("X REG FROM CONST IS " + this.Xreg);
         };
         //AE
         Cpu.prototype.loadXRegFromMem = function () {
             var address = _memManager.getNextTwoBytes();
             this.Xreg = parseInt((_memManager.memory[address + _currentProcess.base].byte), 16);
             this.increasePC(3);
+            _Kernel.krnTrace("X REG FROM MEM IS " + this.Xreg);
         };
         //A0
         Cpu.prototype.loadYRegWithConst = function () {
             this.Yreg = _memManager.getNextByte();
             this.increasePC(2);
         };
+        //AC
         Cpu.prototype.loadYRegFromMem = function () {
             var address = _memManager.getNextTwoBytes();
             this.Yreg = parseInt((_memManager.memory[address + _currentProcess.base].byte), 16);
             this.increasePC(3);
+            _Kernel.krnTrace("YREG FROM MEM IS " + this.Yreg);
         };
         Cpu.prototype.noOp = function () {
             //Nothing to see here, just incrementing the program counter
@@ -212,6 +219,7 @@ var TSOS;
             }
             this.increasePC(3);
         };
+        //D0
         //Branch n bytes if Zflag=0
         Cpu.prototype.branchNotEqual = function () {
             var jump = _memManager.getNextByte();
@@ -229,6 +237,7 @@ var TSOS;
                 this.increasePC(1);
             }
         };
+        //EE
         Cpu.prototype.incrByteVal = function () {
             var address = _memManager.getNextTwoBytes();
             var data = _memManager.memory[address + _currentProcess.base].byte;
@@ -237,6 +246,7 @@ var TSOS;
             _memManager.writeByte(address + _currentProcess.base, value.toString(16));
             this.increasePC(3);
         };
+        //FF
         Cpu.prototype.sysCall = function () {
             if (this.Xreg == 1) {
                 _Kernel.krnTrace("printing " + this.Yreg.toString());
