@@ -33,6 +33,7 @@ var TSOS;
             _memoryTable = document.getElementById('memoryTable');
             _cpuTable = document.getElementById('cpuTable');
             _pcbTable = document.getElementById('pcbQueueTable');
+            _diskTable = document.getElementById('diskTable');
             // Get a global reference to the drawing context.
             _DrawingContext = _Canvas.getContext("2d");
             // Enable the added-in canvas text functions (see canvastext.ts for provenance and details).
@@ -45,6 +46,8 @@ var TSOS;
             document.getElementById("btnStartOS").focus();
             //Create memory table
             this.createMemoryTable();
+            //Create disk table
+            this.createDiskTable();
             // Check for our testing and enrichment core, which
             // may be referenced here (from index.html) as function Glados().
             if (typeof Glados === "function") {
@@ -226,6 +229,57 @@ var TSOS;
                 cells.innerHTML = _readyQueue.getProcess(1).limit.toString();
                 cells = rows.cells[9];
                 cells.innerHTML = _readyQueue.getProcess(1).state.toString();
+            }
+            if (_readyQueue.getProcess(2) != null) {
+                rows = _pcbTable.rows[4];
+                cells = rows.cells[0];
+                cells.innerHTML = _readyQueue.getProcess(2).pid.toString();
+                cells = rows.cells[1];
+                cells.innerHTML = _readyQueue.getProcess(2).PC.toString();
+                cells = rows.cells[2];
+                cells.innerHTML = _memManager.memory[_readyQueue.getProcess(2).PC].byte;
+                cells = rows.cells[3];
+                cells.innerHTML = _readyQueue.getProcess(2).Acc.toString();
+                cells = rows.cells[4];
+                cells.innerHTML = _readyQueue.getProcess(2).Xreg.toString();
+                cells = rows.cells[5];
+                cells.innerHTML = _readyQueue.getProcess(2).Yreg.toString();
+                cells = rows.cells[6];
+                cells.innerHTML = _readyQueue.getProcess(2).Zflag.toString();
+                cells = rows.cells[7];
+                cells.innerHTML = _readyQueue.getProcess(2).base.toString();
+                cells = rows.cells[8];
+                cells.innerHTML = _readyQueue.getProcess(2).limit.toString();
+                cells = rows.cells[9];
+                cells.innerHTML = _readyQueue.getProcess(2).state.toString();
+            }
+        };
+        Control.createDiskTable = function () {
+            for (var x = 0; x < 256; x++) {
+                var row = _diskTable.insertRow(x);
+                for (var columns = 0; columns < 2; columns++) {
+                    var cell = row.insertCell(columns);
+                    if (columns == 0) {
+                        cell.innerHTML = sessionStorage.key(x);
+                    }
+                    else {
+                        cell.innerHTML = sessionStorage.getItem(sessionStorage.key(x));
+                    }
+                }
+            }
+        };
+        Control.updateDiskTable = function () {
+            for (var x = 0; x < 256; x++) {
+                var row = _diskTable.rows[x];
+                for (var columns = 0; columns < 2; columns++) {
+                    var cell = row.cells[columns];
+                    if (columns == 0) {
+                        cell.innerHTML = sessionStorage.key(x);
+                    }
+                    else {
+                        cell.innerHTML = sessionStorage.getItem(sessionStorage.key(x));
+                    }
+                }
             }
         };
         return Control;

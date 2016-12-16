@@ -17,24 +17,31 @@ export class memoryManager {
         //    this.memory = memry.bytes;
             
         }
-        
-        
-        public test(code: string):void{
-            _StdOut.putText(code);
-        }
+       
         
         public loadToMemory(code: string, priority: number):void {
           if((code.length/2) <= 256){
-            for (var i = 0; i < code.length; i += 2) {
-                var toByte = code.charAt(i) + code.charAt(i+1);
-                
-                this.memory[this.memCursor] = new Byte(toByte);
-                this.memCursor++;  
+            if(this.limit > 767){
+                //If there's no room in memory, load to disk
+                _process = new pcb();
+                _process.init(_pid, 0,0,0, priority, "disk");
+                _residentList.push(_process);
+                fileSystemDeviceDriver.createFile("process" + _process.pid.toString());
+                fileSystemDeviceDriver.writeFile("process" + _process.pid.toString(), code);
+                Control.updateDiskTable();
+                _pid++;
+                _StdOut.putText("Program successfully loaded to disk");
+            }else{
+                //If room in memory exists, use it
+                for (var i = 0; i < code.length; i += 2) {
+                    var toByte = code.charAt(i) + code.charAt(i+1);               
+                    this.memory[this.memCursor] = new Byte(toByte);
+                    this.memCursor++;  
+                }
             }
-            
            
             
-            var _process = new TSOS.pcb();
+            _process = new pcb();
             _process.init(_pid, this.base, this.limit, this.counter, priority, "memory");
             _StdOut.putText("Load sucessful. PID = " + _process.pid);
             _residentList.push(_process);
@@ -68,7 +75,13 @@ export class memoryManager {
             Control.updateMemoryTable();
         }
         
-        
+        public getCodeFromMem(base:number, limit:number):string{
+            let hexString = "";
+            for(let i = base; i<limit; i++){
+                hexString += this.memory[i].byte;
+            }
+            return hexString;
+        }
         
         
         public getNextByte(): number{

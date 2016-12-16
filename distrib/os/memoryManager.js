@@ -13,17 +13,28 @@ var TSOS;
             this.counter = 0;
             this.memCursor = this.base;
         }
-        memoryManager.prototype.test = function (code) {
-            _StdOut.putText(code);
-        };
         memoryManager.prototype.loadToMemory = function (code, priority) {
             if ((code.length / 2) <= 256) {
-                for (var i = 0; i < code.length; i += 2) {
-                    var toByte = code.charAt(i) + code.charAt(i + 1);
-                    this.memory[this.memCursor] = new TSOS.Byte(toByte);
-                    this.memCursor++;
+                if (this.limit > 767) {
+                    //If there's no room in memory, load to disk
+                    _process = new TSOS.pcb();
+                    _process.init(_pid, 0, 0, 0, priority, "disk");
+                    _residentList.push(_process);
+                    TSOS.fileSystemDeviceDriver.createFile("process" + _process.pid.toString());
+                    TSOS.fileSystemDeviceDriver.writeFile("process" + _process.pid.toString(), code);
+                    TSOS.Control.updateDiskTable();
+                    _pid++;
+                    _StdOut.putText("Program successfully loaded to disk");
                 }
-                var _process = new TSOS.pcb();
+                else {
+                    //If room in memory exists, use it
+                    for (var i = 0; i < code.length; i += 2) {
+                        var toByte = code.charAt(i) + code.charAt(i + 1);
+                        this.memory[this.memCursor] = new TSOS.Byte(toByte);
+                        this.memCursor++;
+                    }
+                }
+                _process = new TSOS.pcb();
                 _process.init(_pid, this.base, this.limit, this.counter, priority, "memory");
                 _StdOut.putText("Load sucessful. PID = " + _process.pid);
                 _residentList.push(_process);
@@ -51,6 +62,13 @@ var TSOS;
                 this.memory[i] = new TSOS.Byte("00");
             }
             TSOS.Control.updateMemoryTable();
+        };
+        memoryManager.prototype.getCodeFromMem = function (base, limit) {
+            var hexString = "";
+            for (var i = base; i < limit; i++) {
+                hexString += this.memory[i].byte;
+            }
+            return hexString;
         };
         memoryManager.prototype.getNextByte = function () {
             return parseInt((this.memory[_CPU.PC + 1].byte), 16);

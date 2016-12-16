@@ -66,7 +66,7 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellStatus, "status", "<string> - Sets the status.");
             this.commandList[this.commandList.length] = sc;
             // load
-            sc = new TSOS.ShellCommand(this.shellLoad, "load", "- Validates the user code.");
+            sc = new TSOS.ShellCommand(this.shellLoad, "load", " [<priority>]- Validates the user code.");
             this.commandList[this.commandList.length] = sc;
             // run
             sc = new TSOS.ShellCommand(this.shellRun, "run", "<PID> - executes a program in memory");
@@ -103,6 +103,15 @@ var TSOS;
             this.commandList[this.commandList.length] = sc;
             //format
             sc = new TSOS.ShellCommand(this.shellFormat, "format", " - initializes entire disk");
+            this.commandList[this.commandList.length] = sc;
+            //setSchedule
+            sc = new TSOS.ShellCommand(this.shellSetSchedule, "setschedule", " [rr, fcfs, priority] - sets the scheduling algorithm");
+            this.commandList[this.commandList.length] = sc;
+            //getSchedule
+            sc = new TSOS.ShellCommand(this.shellGetSchedule, "getschedule", " - displays the current scheduling algorithm");
+            this.commandList[this.commandList.length] = sc;
+            //ls
+            sc = new TSOS.ShellCommand(this.shellLs, "ls", " - lists files currently stored on disk");
             this.commandList[this.commandList.length] = sc;
             //
             // Display the initial prompt.
@@ -338,7 +347,7 @@ var TSOS;
                     }
                 }
                 if (inputCount == code.length && typeof code !== 'undefined') {
-                    if (args[0] != undefined) {
+                    if (args[0] != undefined && args[0] > 0) {
                         _memManager.loadToMemory(code, args[0]);
                     }
                     else {
@@ -373,6 +382,10 @@ var TSOS;
             _StdOut.putText("Memory cleared");
         };
         Shell.prototype.shellRunall = function (args) {
+            //sort list if priority
+            if (_schedule == "priority") {
+                _residentList = _cpuSched.orderResList(_residentList);
+            }
             var counter = 0;
             for (var i = 0; i < _residentList.length; i++) {
                 _StdOut.putText(" Running " + _residentList[counter].pid);
@@ -449,6 +462,7 @@ var TSOS;
             if (args.length > 0 && args.length <= 60) {
                 TSOS.fileSystemDeviceDriver.createFile(args.join());
                 _StdOut.putText("File " + args.join() + " was created successfully");
+                TSOS.Control.updateDiskTable();
             }
             else {
                 _StdOut.putText("File could not be created. Make sure it is between 1 and 60 characters");
@@ -474,6 +488,7 @@ var TSOS;
                 else {
                     _StdOut.putText("ERROR: Please put data in quotes");
                 }
+                TSOS.Control.updateDiskTable();
             }
         };
         //Delete file from disk
@@ -482,12 +497,44 @@ var TSOS;
                 _Kernel.krnTrace("DELETING FILE");
                 TSOS.fileSystemDeviceDriver.deleteFile(args.join());
                 _StdOut.putText("File " + args.join() + " was successfully deleted");
+                TSOS.Control.updateDiskTable();
             }
         };
         //Nuke the whole disk
         Shell.prototype.shellFormat = function (args) {
             TSOS.fileSystemDeviceDriver.format();
             _StdOut.putText("Hard Drive Formatted Sucessfully.");
+            TSOS.Control.updateDiskTable();
+        };
+        Shell.prototype.shellSetSchedule = function (args) {
+            if (args.length > 0) {
+                var newAlg = args[0].toLowerCase();
+                if (newAlg == "rr" || newAlg == "fcfs" || newAlg == "priority") {
+                    _schedule = newAlg;
+                    _StdOut.putText("Scheduling algorithm set to " + newAlg);
+                }
+                else {
+                    _StdOut.putText("Please enter rr, fcfs, or priority");
+                }
+            }
+            else {
+                _StdOut.putText("Please enter rr, fcfs, or priority");
+            }
+        };
+        Shell.prototype.shellGetSchedule = function (args) {
+            _StdOut.putText("The current scheduling algorithm is " + _schedule);
+        };
+        Shell.prototype.shellLs = function (args) {
+            var trackZero = "0";
+            for (var s = 0; s < 8; s++) {
+                for (var b = 0; b < 8; b++) {
+                    var dirKey = trackZero + s.toString() + b.toString();
+                    if (sessionStorage.getItem(dirKey).charAt(1) == "1") {
+                        _StdOut.putText(TSOS.fileSystemDeviceDriver.hexToString(sessionStorage.getItem(dirKey).slice(4)));
+                        _StdOut.advanceLine();
+                    }
+                }
+            }
         };
         Shell.prototype.shellPrompt = function (args) {
             if (args.length > 0) {

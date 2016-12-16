@@ -113,7 +113,7 @@ module TSOS {
             // load
             sc = new ShellCommand(this.shellLoad,
                                   "load",
-            					  "- Validates the user code.")
+            					  " [<priority>]- Validates the user code.")
             this.commandList[this.commandList.length] = sc;
             
             // run
@@ -188,6 +188,23 @@ module TSOS {
                                   " - initializes entire disk");
             this.commandList[this.commandList.length] = sc;
             
+            //setSchedule
+           sc = new ShellCommand(this.shellSetSchedule,
+                                  "setschedule",
+                                  " [rr, fcfs, priority] - sets the scheduling algorithm");
+            this.commandList[this.commandList.length] = sc;
+            
+            //getSchedule
+           sc = new ShellCommand(this.shellGetSchedule,
+                                  "getschedule",
+                                  " - displays the current scheduling algorithm");
+            this.commandList[this.commandList.length] = sc;
+            
+            //ls
+           sc = new ShellCommand(this.shellLs,
+                                  "ls",
+                                  " - lists files currently stored on disk");
+            this.commandList[this.commandList.length] = sc;
             
             //
             // Display the initial prompt.
@@ -437,7 +454,7 @@ module TSOS {
                     }
                     if (inputCount == code.length && typeof code !== 'undefined'){
                         
-                       if(args[0] != undefined){
+                       if(args[0] != undefined && args[0] > 0){
                            _memManager.loadToMemory(code, args[0]);
                        }else{
                            _memManager.loadToMemory(code, 10);
@@ -481,6 +498,11 @@ module TSOS {
         }
         
         public shellRunall(args) {
+            //sort list if priority
+            if(_schedule == "priority"){
+                _residentList = _cpuSched.orderResList(_residentList);
+            }
+            
             let counter = 0;
             for(var i = 0; i < _residentList.length; i++){
                 _StdOut.putText(" Running " + _residentList[counter].pid);
@@ -561,6 +583,7 @@ module TSOS {
             if(args.length > 0 && args.length<=60){
                 fileSystemDeviceDriver.createFile(args.join());
                 _StdOut.putText("File " + args.join()+ " was created successfully");
+                Control.updateDiskTable();
             }else{
                 _StdOut.putText("File could not be created. Make sure it is between 1 and 60 characters");
             }
@@ -586,6 +609,7 @@ module TSOS {
                 }else{
                     _StdOut.putText("ERROR: Please put data in quotes");
                 }
+                Control.updateDiskTable();
             }
         }
         
@@ -595,6 +619,7 @@ module TSOS {
                 _Kernel.krnTrace("DELETING FILE");
                 fileSystemDeviceDriver.deleteFile(args.join());
                 _StdOut.putText("File " + args.join()+ " was successfully deleted");
+                Control.updateDiskTable();
             }
         }
         
@@ -602,7 +627,40 @@ module TSOS {
         public shellFormat(args){
             fileSystemDeviceDriver.format();
              _StdOut.putText("Hard Drive Formatted Sucessfully.")
+             Control.updateDiskTable();
         }
+        
+        public shellSetSchedule(args){
+            if(args.length > 0){
+                let newAlg = args[0].toLowerCase();
+                if(newAlg == "rr" || newAlg == "fcfs" || newAlg == "priority"){
+                    _schedule = newAlg;
+                    _StdOut.putText("Scheduling algorithm set to " + newAlg);
+                }else{
+                    _StdOut.putText("Please enter rr, fcfs, or priority");
+                }
+            }else{
+                _StdOut.putText("Please enter rr, fcfs, or priority");
+            }
+        }
+        
+        public shellGetSchedule(args){
+            _StdOut.putText("The current scheduling algorithm is " + _schedule);
+        }
+        
+        public shellLs(args){
+            let trackZero = "0";
+            for (let s = 0; s < 8; s++) {
+                for (let b = 0; b < 8; b++) {
+                    let dirKey = trackZero + s.toString() + b.toString();
+                    if(sessionStorage.getItem(dirKey).charAt(1) == "1"){
+                        _StdOut.putText(fileSystemDeviceDriver.hexToString(sessionStorage.getItem(dirKey).slice(4)));
+                        _StdOut.advanceLine();
+                    }
+                } 
+            }    
+        }
+        
         
         public shellPrompt(args) {
             if (args.length > 0) {

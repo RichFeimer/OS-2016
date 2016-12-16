@@ -179,13 +179,13 @@ module TSOS {
            this.Xreg = _memManager.getNextByte();
            this.increasePC(2);
         }
-        
+        //AE
         public loadXRegFromMem(): void {
             let address = _memManager.getNextTwoBytes();
             this.Xreg = parseInt((_memManager.memory[address + _currentProcess.base].byte), 16);
             this.increasePC(3);
         }
-        
+        //A0
         public loadYRegWithConst(): void {
            this.Yreg = _memManager.getNextByte();
            this.increasePC(2);

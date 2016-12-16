@@ -35,6 +35,7 @@ module TSOS {
             _memoryTable = <HTMLTableElement> document.getElementById('memoryTable');
             _cpuTable = <HTMLTableElement> document.getElementById('cpuTable');
             _pcbTable = <HTMLTableElement> document.getElementById('pcbQueueTable');
+            _diskTable= <HTMLTableElement> document.getElementById('diskTable');
             
             // Get a global reference to the drawing context.
             _DrawingContext = _Canvas.getContext("2d");
@@ -52,6 +53,9 @@ module TSOS {
 
             //Create memory table
             this.createMemoryTable();
+            
+            //Create disk table
+            this.createDiskTable();
             
             // Check for our testing and enrichment core, which
             // may be referenced here (from index.html) as function Glados().
@@ -205,7 +209,7 @@ module TSOS {
                 cells.innerHTML = _currentProcess.limit.toString();
                 cells = <HTMLElement>rows.cells[9];
                 cells.innerHTML = _currentProcess.state.toString();
-            }
+                }
 
             if(_readyQueue.getProcess(0) != null) {
                 rows = <HTMLTableRowElement>_pcbTable.rows[2];
@@ -229,7 +233,7 @@ module TSOS {
                 cells.innerHTML = _readyQueue.getProcess(0).limit.toString();
                 cells = <HTMLElement>rows.cells[9];
                 cells.innerHTML = _readyQueue.getProcess(0).state.toString();
-            }
+                }
 
 
                 if(_readyQueue.getProcess(1) != null){
@@ -254,12 +258,67 @@ module TSOS {
                 cells.innerHTML = _readyQueue.getProcess(1).limit.toString();
                 cells = <HTMLElement>rows.cells[9];
                 cells.innerHTML = _readyQueue.getProcess(1).state.toString();
-            }
+                }
+                
+                if(_readyQueue.getProcess(2) != null) {
+                rows = <HTMLTableRowElement>_pcbTable.rows[4];
+                cells = <HTMLElement>rows.cells[0];
+                cells.innerHTML = _readyQueue.getProcess(2).pid.toString();
+                cells = <HTMLElement>rows.cells[1];
+                cells.innerHTML = _readyQueue.getProcess(2).PC.toString();
+                cells = <HTMLElement>rows.cells[2];
+                cells.innerHTML = _memManager.memory[_readyQueue.getProcess(2).PC].byte;
+                cells = <HTMLElement>rows.cells[3];
+                cells.innerHTML = _readyQueue.getProcess(2).Acc.toString();
+                cells = <HTMLElement>rows.cells[4];
+                cells.innerHTML = _readyQueue.getProcess(2).Xreg.toString();
+                cells = <HTMLElement>rows.cells[5];
+                cells.innerHTML = _readyQueue.getProcess(2).Yreg.toString();
+                cells = <HTMLElement>rows.cells[6];
+                cells.innerHTML = _readyQueue.getProcess(2).Zflag.toString();
+                cells = <HTMLElement>rows.cells[7];
+                cells.innerHTML = _readyQueue.getProcess(2).base.toString();
+                cells = <HTMLElement>rows.cells[8];
+                cells.innerHTML = _readyQueue.getProcess(2).limit.toString();
+                cells = <HTMLElement>rows.cells[9];
+                cells.innerHTML = _readyQueue.getProcess(2).state.toString();
+                }
 
 
 
         }
         
+        
+        public static createDiskTable():void{
+            for(let x = 0; x<256; x++){
+                let row = <HTMLTableRowElement>_diskTable.insertRow(x);
+                for(let columns = 0; columns < 2; columns++){
+                    let cell = row.insertCell(columns);
+                    if(columns ==0){
+                      cell.innerHTML = sessionStorage.key(x);
+                    }else{
+                        cell.innerHTML = sessionStorage.getItem(sessionStorage.key(x));
+                    }
+                }
+            }
+        }
+        
+        
+        public static updateDiskTable():void{
+            for(let x = 0; x < 256; x++){
+                let row = <HTMLTableRowElement>_diskTable.rows[x];
+
+                for(let columns = 0; columns < 2; columns++){
+                    let cell = <HTMLElement>row.cells[columns];
+                    if(columns ==0){
+                        cell.innerHTML = sessionStorage.key(x);
+                    }
+                    else{
+                        cell.innerHTML = sessionStorage.getItem(sessionStorage.key(x));
+                    }
+                }
+            }
+        }
         
         
         
